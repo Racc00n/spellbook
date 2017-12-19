@@ -1,6 +1,7 @@
 import { PersistanceService } from './../services/persistance.service';
 import { SpellLevel } from './../model/spell-level';
 import { Component, OnInit } from '@angular/core';
+import { ModelService } from '../services/model.service';
 
 @Component({
   selector: 'app-spell-per-day',
@@ -9,14 +10,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SpellPerDayComponent implements OnInit {
   levels: SpellLevel[];
-  constructor(private persistance: PersistanceService) { }
+  constructor(private modelService: ModelService) { }
 
   ngOnInit() {
-   this.populateLevels();
+    this.levels = this.modelService.spellLevels;
   }
-
-  async populateLevels() {
-    this.levels = await this.persistance.loadSpellLevels();
-  }
-
 }

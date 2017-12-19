@@ -1,3 +1,4 @@
+import { ModelService } from './services/model.service';
 import { PersistanceService } from './services/persistance.service';
 import { SpellPerDayComponent } from './spell-per-day/spell-per-day.component';
 import { TestBed, async } from '@angular/core/testing';
@@ -9,7 +10,7 @@ describe('AppComponent', () => {
         AppComponent,
         SpellPerDayComponent
       ],
-      providers: [PersistanceService]
+      providers: [PersistanceService, ModelService]
     }).compileComponents();
   }));
   it('should create the app', async(() => {

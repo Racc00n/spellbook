@@ -37,10 +37,6 @@ export const defaultSpellLevels: SpellLevel[] = [
         numOfSpells: 0
     },
     {
-        label: '8',
-        numOfSpells: 0
-    },
-    {
         label: '9',
         numOfSpells: 0
     }

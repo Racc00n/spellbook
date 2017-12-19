@@ -1,7 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ModelService } from './../services/model.service';
+import { SpellLevel } from './../model/spell-level';
+import { defaultSpellLevels } from './../data/default-spell-levels';
+import { By } from '@angular/platform-browser';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { SpellPerDayComponent } from './spell-per-day.component';
 import { PersistanceService } from '../services/persistance.service';
+
 
 describe('SpellPerDayComponent', () => {
   let component: SpellPerDayComponent;
@@ -10,20 +15,30 @@ describe('SpellPerDayComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SpellPerDayComponent ],
-      providers: [PersistanceService]
+      declarations: [SpellPerDayComponent],
+      providers: [PersistanceService, ModelService]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SpellPerDayComponent);
     component = fixture.componentInstance;
     persistanceService = fixture.debugElement.injector.get(PersistanceService);
-    fixture.detectChanges();
+    spyOn(persistanceService, 'loadSpellLevels').and.callFake(() => {
+      return new Promise<SpellLevel[]>((resolve, reject) => {
+        resolve(defaultSpellLevels);
+      });
+    });
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have spell levels defined', fakeAsync(() => {
+    fixture.detectChanges();
+    tick();
+    expect(component.levels.length).toBeGreaterThan(0);
+  }));
 });

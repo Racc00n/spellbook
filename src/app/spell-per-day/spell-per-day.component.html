@@ -1,23 +1,29 @@
-<table>
-  <thead>
-    <tr>
-      <th *ngFor="let level of levels">{{level.label}}<span></span></th>      
-    </tr>
-  </thead>
-  <!-- <tfoot>
-      <tr>        
-        <td colspan="4"><span>{{levels.map(level=>level.numOfSpells).reduce((acc,cur)=> acc+cur)}} missions</span></td>
-      </tr>        
-  </tfoot>  -->
-  <tbody>
-    <tr>
-      <td 
-        *ngFor="let level of levels"
-        (click)="level.isEdited = true"
-        (blur)="level.isEdited = false">
-        <input *ngIf="level.isEdited"  >
-        {{level.numOfSpells}}
-      </td>           
-    </tr>
-  </tbody>  
-</table>
+<div> 
+  <h1>Spells Per Day</h1>
+  <div >
+    <table class="table">
+      <thead>
+        <tr class="thead-light">
+          <th>Level</th>
+          <th *ngFor="let level of levels">{{level.label}}
+            <span></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Spells</td>
+          <td *ngFor="let level of levels">
+            <input 
+              class="form-control" 
+              type="number" 
+              min="0" 
+              max="30" 
+              [value]="level.numOfSpells" 
+              (input)="level.numOfSpells = $event.target.value">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
