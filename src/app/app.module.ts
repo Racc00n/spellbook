@@ -1,3 +1,4 @@
+import { AppRoutingModule } from './app-routing.module';
 import { ModelService } from './services/model.service';
 import { PersistanceService } from './services/persistance.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -5,15 +6,23 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { SpellPerDayComponent } from './spell-per-day/spell-per-day.component';
+import { HttpClientModule } from '@angular/common/http';
+import { SpellsSetupComponent } from './spells-setup/spells-setup.component';
+import { LevelPipe } from './pipes/level.pipe';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SpellPerDayComponent
+    SpellPerDayComponent,
+    SpellsSetupComponent,
+    LevelPipe
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule
   ],
   providers: [
     PersistanceService,

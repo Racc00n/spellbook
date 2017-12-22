@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ModelService } from './../services/model.service';
 import { SpellLevel } from './../model/spell-level';
 import { defaultSpellLevels } from './../data/default-spell-levels';
@@ -6,6 +7,7 @@ import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core
 
 import { SpellPerDayComponent } from './spell-per-day.component';
 import { PersistanceService } from '../services/persistance.service';
+import { LevelPipe } from '../pipes/level.pipe';
 
 
 describe('SpellPerDayComponent', () => {
@@ -15,8 +17,9 @@ describe('SpellPerDayComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SpellPerDayComponent],
-      providers: [PersistanceService, ModelService]
+      declarations: [SpellPerDayComponent, LevelPipe],
+      providers: [PersistanceService, ModelService],
+      imports: [HttpClientTestingModule],
     })
       .compileComponents();
   }));

@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SpellLevel } from './../model/spell-level';
 import { defaultSpellLevels } from './../data/default-spell-levels';
 import { PersistanceService } from './persistance.service';
@@ -10,7 +11,10 @@ describe('ModelService', () => {
     TestBed.configureTestingModule({
       providers: [
         ModelService,
-        PersistanceService
+        PersistanceService,
+      ],
+      imports: [
+        HttpClientTestingModule
       ]
     });
     const persistanceService = TestBed.get(PersistanceService);

@@ -1,0 +1,38 @@
+<h1>Spells Setup</h1>
+<label>Spell Level ({{totalPreparedSpells}}/{{totalAllowedSpells}})</label>
+<select #spellLevelSelect class="form-control"  [value]="selectedSpellLevel" (change)="onSelectedSpellLevelChange($event.target.value)">  
+  <option value="" disabled selected>Select</option>
+  <option *ngFor="let spellLevel of spellLevels">{{spellLevel.label}}</option>
+</select>
+<table class="table">
+  <thead class="thead-light">
+    <th>Remaining Uses</th>
+    <th>Known</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>School</th>
+    <th>Components</th>
+    <th>Casting Time</th>
+    <th>Range</th>
+    <th>Target/Effect/Area</th>
+    <th>Duration</th>
+    <th>Save</th>
+    <th>Spell Resistance</th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let spell of spells | level: selectedSpellLevel" [title]="spell.description">
+      <td><input [disabled]="!spell.metaData.known" class="form-control" type="number" min="0" [value]="spell.metaData.preparedUses" (input)="spell.metaData.preparedUses = $event.target.value"></td>
+      <td><input #known class="form-control" type="checkbox" [value]="spell.metaData.known" (change)="spell.metaData.known = !spell.metaData.known;"></td>
+      <td>{{spell.name}}</td>
+      <td>{{spell.shortdescription}}</td>
+      <td>{{spell.school}}</td>
+      <td>{{spell.components}}</td>
+      <td>{{spell.castingtime}}</td>
+      <td>{{spell.range}}</td>
+      <td>{{spell.target || spell.effect || spell.area}}</td>
+      <td>{{spell.duration}}</td>
+      <td>{{spell.savingthrow}}</td>
+      <td>{{spell.spellresistance}}</td>
+    </tr>
+  </tbody>
+</table>

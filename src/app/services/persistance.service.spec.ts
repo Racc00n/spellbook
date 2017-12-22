@@ -1,3 +1,5 @@
+import { SpellClass } from './../model/spell-class.enum';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { defaultSpellLevels } from './../data/default-spell-levels';
 import { SpellLevel } from './../model/spell-level';
 import { TestBed, inject } from '@angular/core/testing';
@@ -7,7 +9,8 @@ import { PersistanceService } from './persistance.service';
 describe('PersistanceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PersistanceService]
+      providers: [PersistanceService],
+      imports: [HttpClientTestingModule]
     });
     let store = {};
 
@@ -52,9 +55,17 @@ describe('PersistanceService', () => {
       expect(spellLevels).toBeDefined();
     });
   }));
+
   it('should return the default spell levels if none are saved', inject([PersistanceService], (service: PersistanceService) => {
     service.loadSpellLevels().then((spellLevels) => {
       expect(spellLevels).toBe(defaultSpellLevels);
+    });
+  }));
+
+  xit('should return an array of spells for a specific spell class', inject([PersistanceService], (service: PersistanceService) => {
+    service.getSpellsByClass(SpellClass.sorcererWizard).then((spells) => {
+      expect(spells.length).toBeGreaterThan(0);
+      // expect(spells[0].level).toContain(SpellClass.sorcererWizard);
     });
   }));
 });

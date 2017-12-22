@@ -1,14 +1,19 @@
+import { SpellMetaData } from "./spell-meta-data";
+
 export interface Spell {
     name: string; // unique
     description: string;
+    shortdescription: string;
     school: string;
-    component: string;
-    time: string;
+    level: string;
+    components: string;
+    castingtime: string;
     range: string;
-    target: string;
-    effect: string;
-    area: string;
+    target?: string;
+    effect?: string;
+    area?: string;
     duration: string;
-    save: string;
-    spellResistance: string;
+    savingthrow?: string;
+    spellresistance?: string;
+    metaData?: SpellMetaData;
 }
