@@ -59,7 +59,8 @@ export class ModelService {
       const filteredSpells = this.spells.filter(spell =>
         spell.level.includes(this.spellClass + ' ' + level)
       );
-      this._spellsByLevel[level].push(...filteredSpells);
+      this._spellsByLevel[level] = filteredSpells;
+      // this._spellsByLevel[level].push(...filteredSpells);
     }
     return this._spellsByLevel[level];
   }

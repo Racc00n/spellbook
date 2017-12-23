@@ -1,0 +1,43 @@
+<h1>
+  <a title="Spells Setup" [routerLink]="['/spells-setup']"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+  Spells Use  
+</h1>
+<!-- <select class="form-control"  [value]="selectedSpellLevel" (change)="onSelectedSpellLevelChange($event.target.value)">  
+  <option value="" disabled selected>Select</option>
+  <option *ngFor="let spellLevel of spellLevels">{{spellLevel.label}}</option>
+</select> -->
+<table class="table" *ngFor="let spellLevel of spellLevels">
+  <thead class="thead-light">
+    <th>Remaining Uses</th>
+    <th>Cast</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>School</th>
+    <th>Components</th>
+    <th>Casting Time</th>
+    <th>Range</th>
+    <th>Target/Effect/Area</th>
+    <th>Duration</th>
+    <th>Save</th>
+    <th>Spell Resistance</th>
+  </thead>
+ 
+  <tbody>
+    <tr *ngFor="let spell of spells | level: spellLevel.label | known" [title]="spell.description">
+      <td>{{spell.metaData.remainingUses}}</td>
+      <td>
+        <button class="btn btn-fab" (click)="spell.metaData.remainingUses = spell.metaData.remainingUses -1 " [disabled]="spell.metaData.remainingUses === 0">Cast</button>
+      </td>
+      <td>{{spell.name}}</td>
+      <td>{{spell.shortdescription}}</td>
+      <td>{{spell.school}}</td>
+      <td>{{spell.components}}</td>
+      <td>{{spell.castingtime}}</td>
+      <td>{{spell.range}}</td>
+      <td>{{spell.target || spell.effect || spell.area}}</td>
+      <td>{{spell.duration}}</td>
+      <td>{{spell.savingthrow}}</td>
+      <td>{{spell.spellresistance}}</td>
+    </tr>
+  </tbody>
+</table>

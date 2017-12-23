@@ -9,6 +9,9 @@ import { SpellPerDayComponent } from './spell-per-day/spell-per-day.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SpellsSetupComponent } from './spells-setup/spells-setup.component';
 import { LevelPipe } from './pipes/level.pipe';
+import { SpellsUseComponent } from './spells-use/spells-use.component';
+import { KnownPipe } from './pipes/known.pipe';
+
 
 
 
@@ -17,7 +20,9 @@ import { LevelPipe } from './pipes/level.pipe';
     AppComponent,
     SpellPerDayComponent,
     SpellsSetupComponent,
-    LevelPipe
+    LevelPipe,
+    SpellsUseComponent,
+    KnownPipe
   ],
   imports: [
     BrowserModule,

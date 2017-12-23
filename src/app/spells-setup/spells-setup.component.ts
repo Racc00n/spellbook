@@ -27,6 +27,9 @@ export class SpellsSetupComponent implements OnInit {
   onSelectedSpellLevelChange(newLevel) {
     this.selectedSpellLevel = newLevel;
     this.totalPreparedSpells = 0;
+    for (let spell of this.modelService.getSpellsByLevel(newLevel)) {
+      this.totalPreparedSpells += spell.metaData.preparedUses;
+    }
     for (let spellLevel of this.modelService.spellLevels) {
       if (spellLevel.label === this.selectedSpellLevel) {
         this.totalAllowedSpells = spellLevel.numOfSpells;
@@ -34,4 +37,20 @@ export class SpellsSetupComponent implements OnInit {
       }
     }
   }
+
+  onPreparedUsesChanged(spell: Spell, event: any) {
+    let newValue: number = +event.target.value;
+    const oldValue: number = spell.metaData.preparedUses;
+    if (isNaN(newValue)) {
+      newValue = 0;
+      event.target.value = newValue;
+    } else if (this.totalPreparedSpells + newValue - oldValue > this.totalAllowedSpells) {
+      newValue = oldValue;
+      event.target.value = newValue;
+    }
+    spell.metaData.preparedUses = newValue;
+    spell.metaData.remainingUses = newValue;
+    this.totalPreparedSpells += newValue - oldValue;
+  }
+
 }

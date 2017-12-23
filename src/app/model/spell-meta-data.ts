@@ -1,7 +1,7 @@
 export class SpellMetaData {
     constructor(
-        private known: boolean = false,
-        private preparedUses = 0,
-        private remainingUses = 0) {
+        public known: boolean = false,
+        public preparedUses = 0,
+        public remainingUses = 0) {
     }
 }
