@@ -1,36 +1,60 @@
 import { SpellLevel } from './../model/spell-level';
 import { Spell } from './../model/spell';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModelService } from '../services/model.service';
+import { trigger, state, transition, animate, style} from '@angular/animations';
 
 @Component({
   selector: 'app-spells-setup',
   templateUrl: './spells-setup.component.html',
-  styleUrls: ['./spells-setup.component.scss']
+  styleUrls: ['./spells-setup.component.scss'],
+  animations: [
+    trigger('alert', [
+      state('in', style({
+        opacity: 0,        
+      })),
+      transition('* => void', [
+        animate(250, style({          
+          opacity: 0
+        }))
+      ]),
+      transition('void => *', [
+        animate(250, style({          
+          opacity: 1
+        }))
+      ])      
+    ]),
+  ]
 })
-export class SpellsSetupComponent implements OnInit {
+export class SpellsSetupComponent implements OnInit, OnDestroy {
   spells: Spell[];
   spellLevels: SpellLevel[];
   selectedSpellLevel: string;
   totalPreparedSpells: number;
   totalAllowedSpells: number;
+  replenishClicked:boolean;
+
   constructor(private modelService: ModelService) { }
 
   ngOnInit() {
     this.spells = this.modelService.spells;
     this.spellLevels = this.modelService.spellLevels;
-    this.selectedSpellLevel = '';
+    this.selectedSpellLevel = this.modelService.spellLevels.length > 0 ? this.modelService.spellLevels[0].label : '';
     this.totalPreparedSpells = 0;
     this.totalAllowedSpells = 0;
+  }
+
+  ngOnDestroy() {
+    this.modelService.saveSpellsMetaData();
   }
 
   onSelectedSpellLevelChange(newLevel) {
     this.selectedSpellLevel = newLevel;
     this.totalPreparedSpells = 0;
-    for (let spell of this.modelService.getSpellsByLevel(newLevel)) {
+    for (const spell of this.modelService.getSpellsByLevel(newLevel)) {
       this.totalPreparedSpells += spell.metaData.preparedUses;
     }
-    for (let spellLevel of this.modelService.spellLevels) {
+    for (const spellLevel of this.modelService.spellLevels) {
       if (spellLevel.label === this.selectedSpellLevel) {
         this.totalAllowedSpells = spellLevel.numOfSpells;
         break;
@@ -51,6 +75,17 @@ export class SpellsSetupComponent implements OnInit {
     spell.metaData.preparedUses = newValue;
     spell.metaData.remainingUses = newValue;
     this.totalPreparedSpells += newValue - oldValue;
+  }
+
+  onReplenishClicked() {
+    for (const spell of this.spells) {
+      spell.metaData.remainingUses = spell.metaData.preparedUses;
+    }
+
+    this.replenishClicked = true;
+    setTimeout(()=>{
+      this.replenishClicked = false;
+    }, 2000);
   }
 
 }

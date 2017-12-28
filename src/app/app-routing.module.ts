@@ -6,8 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 
 const appRoutes: Routes = [
-  { path: '', component: SpellPerDayComponent},
-  { path: 'spells-per-day', component: SpellPerDayComponent },
+  { path: '', component: SpellPerDayComponent, pathMatch: 'full'},
+  { path: 'spells-per-day', component: SpellPerDayComponent},
   { path: 'spells-setup', component: SpellsSetupComponent },
   { path: 'spells-use', component: SpellsUseComponent }
 ];

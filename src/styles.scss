@@ -1,2 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 $fa-font-path:   "/node_modules/font-awesome/scss/font";
+h1 {
+    position:sticky;
+    top:0;
+    z-index:100; 
+    background-color: white;
+    margin-bottom: 0;
+    padding-bottom: 0.5rem;
+}
+
+button {
+    cursor:  pointer;
+}
+

@@ -7,8 +7,15 @@ import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core
 
 import { SpellPerDayComponent } from './spell-per-day.component';
 import { PersistanceService } from '../services/persistance.service';
-import { LevelPipe } from '../pipes/level.pipe';
+import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
+import { Component } from '@angular/core';
 
+
+@Component({
+  template: ''
+})
+class DummyComponent { }
 
 describe('SpellPerDayComponent', () => {
   let component: SpellPerDayComponent;
@@ -17,9 +24,12 @@ describe('SpellPerDayComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SpellPerDayComponent, LevelPipe],
+      declarations: [SpellPerDayComponent, DummyComponent],
       providers: [PersistanceService, ModelService],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule,
+        RouterTestingModule.withRoutes([
+          { path: 'spells-setup', component: DummyComponent }
+        ])],
     })
       .compileComponents();
   }));

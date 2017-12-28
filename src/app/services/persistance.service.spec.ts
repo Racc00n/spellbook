@@ -5,6 +5,8 @@ import { SpellLevel } from './../model/spell-level';
 import { TestBed, inject } from '@angular/core/testing';
 
 import { PersistanceService } from './persistance.service';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
 describe('PersistanceService', () => {
   beforeEach(() => {
@@ -62,10 +64,11 @@ describe('PersistanceService', () => {
     });
   }));
 
-  xit('should return an array of spells for a specific spell class', inject([PersistanceService], (service: PersistanceService) => {
-    service.getSpellsByClass(SpellClass.sorcererWizard).then((spells) => {
-      expect(spells.length).toBeGreaterThan(0);
-      // expect(spells[0].level).toContain(SpellClass.sorcererWizard);
-    });
-  }));
+  // it('should return an array of spells for a specific spell class', inject([PersistanceService, HttpClient], (service: PersistanceService, http: HttpClient) => {
+  //   spyOn(http,'get').and.callFake(()=> new Observable({}))
+  //   service.getSpellsByClass(SpellClass.sorcererWizard).then((spells) => {      
+  //     expect(spells.length).toBeGreaterThan(0);
+  //     // expect(spells[0].level).toContain(SpellClass.sorcererWizard);
+  //   });
+  // }));
 });

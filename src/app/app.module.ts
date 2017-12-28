@@ -11,9 +11,8 @@ import { SpellsSetupComponent } from './spells-setup/spells-setup.component';
 import { LevelPipe } from './pipes/level.pipe';
 import { SpellsUseComponent } from './spells-use/spells-use.component';
 import { KnownPipe } from './pipes/known.pipe';
-
-
-
+import { RemainingUsesPipe } from './pipes/remaining-uses.pipe';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -22,12 +21,14 @@ import { KnownPipe } from './pipes/known.pipe';
     SpellsSetupComponent,
     LevelPipe,
     SpellsUseComponent,
-    KnownPipe
+    KnownPipe,
+    RemainingUsesPipe
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [
     PersistanceService,

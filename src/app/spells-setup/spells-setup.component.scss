@@ -1,8 +1,27 @@
+.spell-controls {
+    position: sticky;
+    top: 3.5rem;
+    background-color: white;
+}
+
 input[type="checkbox"] {
-   height: 2.4rem; 
+   height: 2.4rem;    
+}
+ 
+input {
+    text-align: center;
+    padding-left: 2rem;
 }
 
 select {
+    vertical-align: middle;
     width: 4rem;
     display: inline-block;
+}
+table {
+    margin-top: 0.5rem;
+}
+
+.alert-success {
+    margin-top: 1rem;
 }

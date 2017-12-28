@@ -1,5 +1,6 @@
-import { SpellClass } from './../model/spell-class.enum';
-import { SpellLevel } from './../model/spell-level';
+
+import { SpellClass } from '../model/spell-class.enum';
+import { SpellLevel } from '../model/spell-level';
 import { Injectable } from '@angular/core';
 import { PersistanceService } from './persistance.service';
 import { Spell } from '../model/spell';
@@ -14,7 +15,7 @@ export class ModelService {
   private _spellsByLevel: { [level: string]: Spell[] };
 
   constructor(private persistance: PersistanceService) {
-    this._spellClass = SpellClass.sorcererWizard; // TODO - this should be dynamic later on    
+    this._spellClass = SpellClass.sorcererWizard; // TODO - this should be dynamic later on
     this._spellsByLevel = {};
   }
 
@@ -46,9 +47,10 @@ export class ModelService {
   }
 
   private async populateSpells() {
-    const reponse = await this.persistance.getSpellsByClass(this._spellClass);
-    this._spells.push(...reponse);
-    this._spells.map(spell => spell.metaData = new SpellMetaData());
+    const spellsReponse = await this.persistance.getSpellsByClass(this._spellClass);
+    const spellsMetaDataReponse = await this.persistance.loadSpellsMetaDataByClass(this._spellClass);
+    this._spells.push(...spellsReponse);
+    this._spells.map(spell => spell.metaData = spellsMetaDataReponse[spell.name] || new SpellMetaData());
   }
 
   getSpellsByLevel(level: string) {
@@ -59,9 +61,26 @@ export class ModelService {
       const filteredSpells = this.spells.filter(spell =>
         spell.level.includes(this.spellClass + ' ' + level)
       );
-      this._spellsByLevel[level] = filteredSpells;
-      // this._spellsByLevel[level].push(...filteredSpells);
+      this._spellsByLevel[level] = filteredSpells;      
     }
     return this._spellsByLevel[level];
+  }
+
+  saveSpellsMetaData() {
+    const spellsMetaDatas: { [spell: string]: SpellMetaData } = {};
+    for (let spell of this.spells) {
+      spellsMetaDatas[spell.name] = spell.metaData;
+    }
+
+    this.persistance.saveSpellsMetaDataByClass(spellsMetaDatas, this.spellClass);
+  }
+
+  saveSpellLevels() {
+    this.persistance.saveSpellLevels(this.spellLevels);
+  }
+
+  saveAll() {
+    this.saveSpellsMetaData();
+    this.saveSpellLevels();
   }
 }
