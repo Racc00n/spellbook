@@ -2,10 +2,6 @@
   <a title="Spells Setup" [routerLink]="['/spells-setup']"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
   Spells Use
 </h1>
-<!-- <select class="form-control"  [value]="selectedSpellLevel" (change)="onSelectedSpellLevelChange($event.target.value)">  
-  <option value="" disabled selected>Select</option>
-  <option *ngFor="let spellLevel of spellLevels">{{spellLevel.label}}</option>
-</select> -->
 <div *ngFor="let spellLevel of spellLevels" [hidden]="tbody.children.length === 0">
   <h2 class="alert-dark">Level {{spellLevel.label}} </h2>
   <table class="table">
@@ -25,7 +21,7 @@
     </thead>
 
     <tbody #tbody>
-      <tr [@spellRemoval] (@spellRemoval.done)="onRemovalDone(tbody.children.length === 0)" *ngFor="let spell of spells | level: spellLevel.label | known | remainingUses"
+      <tr [@spellRemoval] (@spellRemoval.done)="spellRemovalDone(tbody.children.length === 0)" *ngFor="let spell of spells | level: spellLevel.label | known | remainingUses"
         [title]="spell.description">
         <td>{{spell.metaData.remainingUses}}</td>
         <td>

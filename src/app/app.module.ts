@@ -16,13 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    SpellPerDayComponent,
-    SpellsSetupComponent,
-    LevelPipe,
-    SpellsUseComponent,
-    KnownPipe,
-    RemainingUsesPipe
+    AppComponent    
   ],
   imports: [
     BrowserModule,
