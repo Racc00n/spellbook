@@ -69,6 +69,9 @@ export class ModelService {
   saveSpellsMetaData() {
     const spellsMetaDatas: { [spell: string]: SpellMetaData } = {};
     for (let spell of this.spells) {
+      if (!spell.metaData.known && spell.metaData.preparedUses === 0 ){
+        continue;//do not store spell metadata with default values.
+      }
       spellsMetaDatas[spell.name] = spell.metaData;
     }
 

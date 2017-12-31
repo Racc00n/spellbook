@@ -8,8 +8,10 @@ import { TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
 
 import { ModelService } from './model.service';
 import { SpellMetaData } from '../model/spell-meta-data';
+import { SpellClass } from '../model/spell-class.enum';
 
 let persistanceService:PersistanceService;
+let spells:Spell[];
 describe('ModelService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -22,6 +24,35 @@ describe('ModelService', () => {
       ]
     });
     persistanceService = TestBed.get(PersistanceService);
+    spells = [<Spell>{
+      name: 'someSpell',
+      level: 'Sor/Wiz 1',
+      school: 'Conjuration',
+      components: 'V, S, M, F',
+      castingtime: '1 standard action',
+      range: 'Long (400 ft. + 40 ft./level)',
+      effect: 'One amazing spell',
+      duration: '1 round + 1 round per three levels',
+      savingthrow: 'None',
+      spellresistance: 'No',
+      description: 'An amazing spell that does nothing long text',
+      shortdescription: 'An Amazing spell that does nothing short text'
+      
+    },
+    <Spell>{
+      name: 'someSpell 2',
+      level: 'Sor/Wiz 2',
+      school: 'Conjuration',
+      components: 'V, S',
+      castingtime: '1 standard action',
+      range: 'Long (400 ft. + 40 ft./level)',
+      effect: 'another amazing spell',
+      duration: '1 round + 1 round per three levels',
+      savingthrow: 'None',
+      spellresistance: 'No',
+      description: 'An amazing spell 2 that does nothing long text',
+      shortdescription: 'An Amazing spell 2 that does nothing short text'
+    }];
     spyOn(persistanceService, 'loadSpellLevels').and.callFake(() => {
       return new Promise<SpellLevel[]>((resolve, reject) => {
         resolve(defaultSpellLevels);
@@ -29,35 +60,7 @@ describe('ModelService', () => {
     });
     spyOn(persistanceService, 'getSpellsByClass').and.callFake(() => {
       return new Promise<Spell[]>((resolve, reject) => {
-        resolve([<Spell>{
-          name: 'someSpell',
-          level: 'Sor/Wiz 1',
-          school: 'Conjuration',
-          components: 'V, S, M, F',
-          castingtime: '1 standard action',
-          range: 'Long (400 ft. + 40 ft./level)',
-          effect: 'One amazing spell',
-          duration: '1 round + 1 round per three levels',
-          savingthrow: 'None',
-          spellresistance: 'No',
-          description: 'An amazing spell that does nothing long text',
-          shortdescription: 'An Amazing spell that does nothing short text'
-          
-        },
-        <Spell>{
-          name: 'someSpell 2',
-          level: 'Sor/Wiz 2',
-          school: 'Conjuration',
-          components: 'V, S',
-          castingtime: '1 standard action',
-          range: 'Long (400 ft. + 40 ft./level)',
-          effect: 'another amazing spell',
-          duration: '1 round + 1 round per three levels',
-          savingthrow: 'None',
-          spellresistance: 'No',
-          description: 'An amazing spell 2 that does nothing long text',
-          shortdescription: 'An Amazing spell 2 that does nothing short text'
-        }]);
+        resolve(spells);
       });
     });
     spyOn(persistanceService, 'saveSpellsMetaDataByClass').and.callFake(()=>{
@@ -135,4 +138,17 @@ describe('ModelService', () => {
       expect(service.spells[0].metaData).toBeDefined();      
     }))
   );
+  it('should save metadata only for spells that have non-default value', inject([ModelService], (service: ModelService) => {
+    const metaData = {
+      'someSpell': new SpellMetaData(true,3,0),
+      'someSpell 2': new SpellMetaData(false,0,0)
+    }
+
+    spells[0].metaData = metaData['someSpell'];
+    spells[1].metaData = metaData['someSpell 2'];
+
+    spyOnProperty(service, 'spells', 'get').and.returnValue(spells);
+    service.saveSpellsMetaData();
+    expect(persistanceService.saveSpellsMetaDataByClass).toHaveBeenCalledWith({ 'someSpell': metaData['someSpell']}, SpellClass.sorcererWizard);
+  }))
 });
