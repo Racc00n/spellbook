@@ -14,12 +14,12 @@ import { Store } from '@ngrx/store';
 @Injectable()
 export class SpellLevelsEffects {
 
-  constructor(private actions$: Actions,
+  constructor(private actions: Actions,
               private store: Store<AppState>,
               private persistance: PersistanceService) { }
 
   @Effect()
-  spellLevelsFetch = this.actions$
+  spellLevelsFetch = this.actions
     .ofType(FETCH_SPELL_LEVELS)
     .switchMap((action: FetchSpellLevels) => {
       return Observable.fromPromise(this.persistance.loadSpellLevels())
@@ -31,7 +31,7 @@ export class SpellLevelsEffects {
     });
 
   @Effect({ dispatch: false })
-  spellLevelStore = this.actions$
+  spellLevelStore = this.actions
     .ofType(STORE_SPELL_LEVELS)
     .withLatestFrom(this.store.select('spellLevels'))
     .switchMap(([action, state]) => {

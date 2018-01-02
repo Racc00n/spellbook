@@ -16,16 +16,15 @@ import { StoreSpellLevels, UpdateSpellLevel, FetchSpellLevels } from '../stores/
 })
 export class SpellPerDayComponent implements OnInit, OnDestroy {
   spellLevelsState: Observable<fromSpellLevels.State>;
-
+  
   constructor(private store: Store<AppState>) { }
 
   ngOnInit() {
-    this.spellLevelsState = this.store.select('spellLevels');
-    this.store.dispatch(new FetchSpellLevels());
+    this.spellLevelsState = this.store.select('spellLevels');    
   }
 
-  ngOnDestroy() {
-    this.store.dispatch(new StoreSpellLevels());
+  ngOnDestroy() {    
+    this.store.dispatch(new StoreSpellLevels());    
   }
 
   onSpellLevelChange(index: number, level: SpellLevel, value: number) {

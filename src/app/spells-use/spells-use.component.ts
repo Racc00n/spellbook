@@ -1,9 +1,13 @@
-import { ModelService } from './../services/model.service';
+import { Observable } from 'rxjs/Observable';
+import { AppState } from './../stores/app.reducers';
+import { SpellsService } from './../services/spells.service';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import { state, trigger, transition, style, animate } from '@angular/animations';
 import { Spell } from '../model/spell';
 import { SpellLevel } from '../model/spell-level';
-
+import { Store } from '@ngrx/store';
+import { StoreSpellLevels } from '../stores/spell-levels/spell-levels.actions';
+import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
 
 @Component({
   selector: 'app-spells-use',
@@ -26,18 +30,20 @@ import { SpellLevel } from '../model/spell-level';
 
 })
 export class SpellsUseComponent implements OnInit, OnDestroy {
-  spells: Spell[];
-  spellLevels: SpellLevel[];
+  spells: Spell[];  
+  spellLevelsState: Observable<fromSpellLevels.State>;
 
-  constructor(private changeRef:  ChangeDetectorRef, private modelService: ModelService) { }
+  constructor(private store:Store<AppState>,
+              private spellService: SpellsService,
+              private changeRef:  ChangeDetectorRef) { }
 
-  ngOnInit() {
-    this.spellLevels = this.modelService.spellLevels;
-    this.spells = this.modelService.spells;
+  ngOnInit() {    
+    this.spells = this.spellService.spells;
+    this.spellLevelsState = this.store.select('spellLevels');
   }
 
   ngOnDestroy() {
-    this.modelService.saveSpellsMetaData();
+    this.store.dispatch(new StoreSpellLevels());
   }
 
   spellRemovalDone(shouldDetectChanges: boolean) {

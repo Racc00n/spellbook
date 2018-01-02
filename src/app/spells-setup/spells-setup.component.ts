@@ -1,8 +1,17 @@
+import { LevelPipe } from './../pipes/level.pipe';
+import { UpdateSelectedSpellLevelLabel } from './../stores/spell-levels/spell-levels.actions';
+import { Observable } from 'rxjs/Observable';
+import { SpellsService } from './../services/spells.service';
+import { UpdateSpellMetaData, StoreSpellMetaDatas } from './../stores/spell-meta-datas/spell-meta-datas.actions';
 import { SpellLevel } from './../model/spell-level';
 import { Spell } from './../model/spell';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ModelService } from '../services/model.service';
-import { trigger, state, transition, animate, style} from '@angular/animations';
+import { trigger, state, transition, animate, style } from '@angular/animations';
+import { AppState } from '../stores/app.reducers';
+import { Store } from '@ngrx/store';
+import { SpellMetaData } from '../model/spell-meta-data';
+import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-spells-setup',
@@ -11,55 +20,58 @@ import { trigger, state, transition, animate, style} from '@angular/animations';
   animations: [
     trigger('alert', [
       state('in', style({
-        opacity: 0,        
+        opacity: 0,
       })),
       transition('* => void', [
-        animate(250, style({          
+        animate(250, style({
           opacity: 0
         }))
       ]),
       transition('void => *', [
-        animate(250, style({          
+        animate(250, style({
           opacity: 1
         }))
-      ])      
+      ])
     ]),
   ]
 })
 export class SpellsSetupComponent implements OnInit, OnDestroy {
+  spellLevelSubscription: Subscription;
   spells: Spell[];
-  spellLevels: SpellLevel[];
-  selectedSpellLevel: string;
+  spellLevelsState: Observable<fromSpellLevels.State>;    
   totalPreparedSpells: number;
   totalAllowedSpells: number;
-  replenishClicked:boolean;
+  replenishClicked: boolean;
 
-  constructor(private modelService: ModelService) { }
+  constructor(private store: Store<AppState>,
+    private spellService: SpellsService) { }
 
   ngOnInit() {
-    this.spells = this.modelService.spells;
-    this.spellLevels = this.modelService.spellLevels;
-    this.selectedSpellLevel = this.modelService.spellLevels.length > 0 ? this.modelService.spellLevels[0].label : '';
+    this.spellLevelsState = this.store.select('spellLevels');
+    this.spells = this.spellService.spells;
     this.totalPreparedSpells = 0;
     this.totalAllowedSpells = 0;
+    this.spellLevelSubscription = this.spellLevelsState.subscribe(state => {
+      for (const spellLevel of state.spellLevels) {
+        if (spellLevel.label === state.selectedSpellLevelLabel) {
+          this.totalAllowedSpells = spellLevel.numOfSpells;
+          break;
+        }
+      }
+      this.totalPreparedSpells = 0;
+      new LevelPipe(this.spellService)
+        .transform(this.spells,state.selectedSpellLevelLabel)      
+        .map(spell=>this.totalPreparedSpells += spell.metaData.preparedUses);
+    });
   }
 
   ngOnDestroy() {
-    this.modelService.saveSpellsMetaData();
+    this.store.dispatch(new StoreSpellMetaDatas());
+    this.spellLevelSubscription.unsubscribe();
   }
 
-  onSelectedSpellLevelChange(newLevel) {
-    this.selectedSpellLevel = newLevel;
-    this.totalPreparedSpells = 0;
-    for (const spell of this.modelService.getSpellsByLevel(newLevel)) {
-      this.totalPreparedSpells += spell.metaData.preparedUses;
-    }
-    for (const spellLevel of this.modelService.spellLevels) {
-      if (spellLevel.label === this.selectedSpellLevel) {
-        this.totalAllowedSpells = spellLevel.numOfSpells;
-        break;
-      }
-    }
+  onSelectedSpellLevelChange(newLevelLabel: string) {
+    this.store.dispatch(new UpdateSelectedSpellLevelLabel(newLevelLabel));   
   }
 
   onPreparedUsesChanged(spell: Spell, event: any) {
@@ -72,20 +84,33 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
       newValue = oldValue;
       event.target.value = newValue;
     }
-    spell.metaData.preparedUses = newValue;
-    spell.metaData.remainingUses = newValue;
+    this.store.dispatch(new UpdateSpellMetaData({
+      spell: spell.name,
+      metaData: { ...spell.metaData, preparedUses: newValue, remainingUses: newValue }
+    }));
+
     this.totalPreparedSpells += newValue - oldValue;
   }
 
   onReplenishClicked() {
     for (const spell of this.spells) {
-      spell.metaData.remainingUses = spell.metaData.preparedUses;
+      if (spell.metaData.known && spell.metaData.preparedUses > 0) {
+        this.store.dispatch(new UpdateSpellMetaData({
+          spell: spell.name,
+          metaData: { ...spell.metaData, remainingUses: spell.metaData.preparedUses }
+        }));
+      }
     }
-
     this.replenishClicked = true;
-    setTimeout(()=>{
+    setTimeout(() => {
       this.replenishClicked = false;
     }, 2000);
   }
+
+  onSpellKnownChange(spell: Spell) {
+    const metaData: SpellMetaData = { ...spell.metaData, known: !spell.metaData.known };
+    this.store.dispatch(new UpdateSpellMetaData({ spell: spell.name, metaData }));
+  }
+
 
 }

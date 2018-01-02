@@ -2,7 +2,7 @@
   <a title="Spells Setup" [routerLink]="['/spells-setup']"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
   Spells Use
 </h1>
-<div *ngFor="let spellLevel of spellLevels" [hidden]="tbody.children.length === 0">
+<div *ngFor="let spellLevel of (spellLevelsState|async).spellLevels" [hidden]="tbody.children.length === 0">
   <h2 class="alert-dark">Level {{spellLevel.label}} </h2>
   <table class="table">
     <thead class="thead-light">

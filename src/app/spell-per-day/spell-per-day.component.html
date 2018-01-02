@@ -20,8 +20,8 @@
               type="number" 
               min="0" 
               max="30" 
-              [value]="level.numOfSpells" 
-              (blur)="onSpellLevelChange(i, level, +$event.target.value)">
+              [value]="level.numOfSpells"               
+              (focusout)="onSpellLevelChange(i, level, +$event.target.value)">
           </td>
         </tr>
       </tbody>
