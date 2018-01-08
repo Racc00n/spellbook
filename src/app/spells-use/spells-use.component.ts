@@ -1,3 +1,4 @@
+import { UpdateSpellMetaData, StoreSpellMetaDatas } from './../stores/spell-meta-datas/spell-meta-datas.actions';
 import { Observable } from 'rxjs/Observable';
 import { AppState } from './../stores/app.reducers';
 import { SpellsService } from './../services/spells.service';
@@ -8,6 +9,7 @@ import { SpellLevel } from '../model/spell-level';
 import { Store } from '@ngrx/store';
 import { StoreSpellLevels } from '../stores/spell-levels/spell-levels.actions';
 import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
+import { SpellMetaData } from '../model/spell-meta-data';
 
 @Component({
   selector: 'app-spells-use',
@@ -43,7 +45,7 @@ export class SpellsUseComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.store.dispatch(new StoreSpellLevels());
+    this.store.dispatch(new StoreSpellMetaDatas());
   }
 
   spellRemovalDone(shouldDetectChanges: boolean) {
@@ -51,5 +53,16 @@ export class SpellsUseComponent implements OnInit, OnDestroy {
       this.changeRef.detectChanges();
     }
   }
-
+  
+  castSpellClicked(spell) {
+    this.store.dispatch(
+      new UpdateSpellMetaData({
+          spell: spell.name, 
+          metaData: new SpellMetaData(
+            spell.metaData.known, 
+            spell.metaData.preparedUses,
+            spell.metaData.remainingUses - 1)          
+        })
+    );    
+  }
 }

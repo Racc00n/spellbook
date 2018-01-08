@@ -1,5 +1,6 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ModelService } from './../services/model.service';
+import { StoreMock } from './../stores/store.mock';
+import { StoreSpellLevels } from './../stores/spell-levels/spell-levels.actions';
+import { Observable } from 'rxjs/Observable';
 import { SpellLevel } from './../model/spell-level';
 import { defaultSpellLevels } from './../data/default-spell-levels';
 import { By } from '@angular/platform-browser';
@@ -9,9 +10,13 @@ import { SpellPerDayComponent } from './spell-per-day.component';
 import { PersistanceService } from '../services/persistance.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RouterModule } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
+import { SpellsService } from '../services/spells.service';
+import { SpellsServiceMock } from '../services/spells.service.mock';
+import { Store } from '@ngrx/store';
 
-
+import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
+import { UpdateSpellLevel } from '../stores/spell-levels/spell-levels.actions';
 @Component({
   template: ''
 })
@@ -20,13 +25,17 @@ class DummyComponent { }
 describe('SpellPerDayComponent', () => {
   let component: SpellPerDayComponent;
   let fixture: ComponentFixture<SpellPerDayComponent>;
-  let persistanceService: PersistanceService;
+  let persistanceService: SpellsServiceMock;
+  let store: StoreMock;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SpellPerDayComponent, DummyComponent],
-      providers: [PersistanceService, ModelService],
-      imports: [HttpClientTestingModule,
+      providers: [
+        { provide: SpellsService, useClass: SpellsServiceMock },
+        { provide: Store, useClass: StoreMock }
+      ],
+      imports: [
         RouterTestingModule.withRoutes([
           { path: 'spells-setup', component: DummyComponent }
         ])],
@@ -35,23 +44,73 @@ describe('SpellPerDayComponent', () => {
   }));
 
   beforeEach(() => {
+    store = TestBed.get(Store);
     fixture = TestBed.createComponent(SpellPerDayComponent);
     component = fixture.componentInstance;
-    persistanceService = fixture.debugElement.injector.get(PersistanceService);
-    spyOn(persistanceService, 'loadSpellLevels').and.callFake(() => {
-      return new Promise<SpellLevel[]>((resolve, reject) => {
-        resolve(defaultSpellLevels);
-      });
-    });
+    store.stateMap = {};
+    store.subjectsMap = {};
   });
-
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have spell levels defined', fakeAsync(() => {
-    fixture.detectChanges();
-    tick();
-    expect(component.levels.length).toBeGreaterThan(0);
-  }));
+  it('should update state when changing numOfSpells of a spellLevel', () => {
+    const index = 0;
+    const level = defaultSpellLevels[index];
+    const numOfSpells = level.numOfSpells + 1;
+    let spy = spyOn(store, 'dispatch');
+    component.onSpellLevelChange(0, level, numOfSpells);
+    expect(spy).toHaveBeenCalledWith(new UpdateSpellLevel({
+      index,
+      numOfSpells
+    }));
+  });
+
+  it('should store spell levels when component is destroyed', () => {
+    let spy = spyOn(store, 'dispatch');
+    fixture.destroy();
+    expect(spy).toHaveBeenCalledWith(new StoreSpellLevels());
+  });
+
+  describe('SpellLevels tests', () => {
+    let state; 
+    beforeEach(fakeAsync(() => {
+      state = <fromSpellLevels.State>{
+        selectedSpellLevelLabel: '0',
+        spellLevels: defaultSpellLevels
+      }
+      store.stateMap['spellLevels'] = state;
+      fixture.detectChanges();      
+      tick();
+    }));  
+
+    it('should have spell levels defined', () => {      
+      component.spellLevelsState.subscribe(currentState => {
+        expect(currentState).toEqual(state);
+      })
+    });
+
+    it('should display the spell levels labels in the headers ', () => {      
+      const headerElements = fixture.debugElement.queryAll(By.css('tr>th'));
+      const th = (<HTMLTableHeaderCellElement>headerElements[1].nativeElement);
+      expect(headerElements.length).toEqual(defaultSpellLevels.length + 1);      
+      expect(th.textContent).toEqual(defaultSpellLevels[0].label);
+      
+    });
+
+    it('should display the spell levels num of spells in the inputs ', () => {      
+      const elements = fixture.debugElement.queryAll(By.css('tr>td'));
+      const input = (<HTMLInputElement>elements[1].children[0].nativeElement);
+      expect(elements.length).toEqual(defaultSpellLevels.length + 1);      
+      expect(+input.value).toEqual(defaultSpellLevels[0].numOfSpells);
+    });
+
+    it('should trigger the onSpellChange function when focusing out of an input', () => {      
+      const spy = spyOn(component, 'onSpellLevelChange');
+      const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('td>input')).nativeElement;
+      inputElement.dispatchEvent(new Event('focusout'));
+      expect(spy).toHaveBeenCalled();
+    });
+  });
 });

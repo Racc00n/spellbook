@@ -25,7 +25,7 @@
         [title]="spell.description">
         <td>{{spell.metaData.remainingUses}}</td>
         <td>
-          <button class="btn btn-fab btn-primary" (click)="spell.metaData.remainingUses = spell.metaData.remainingUses - 1 ">Cast</button>
+          <button class="btn btn-fab btn-primary" (click)="castSpellClicked(spell)">Cast</button>
         </td>
         <td>{{spell.name}}</td>
         <td>{{spell.shortdescription}}</td>

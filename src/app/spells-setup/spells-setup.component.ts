@@ -97,7 +97,10 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
       if (spell.metaData.known && spell.metaData.preparedUses > 0) {
         this.store.dispatch(new UpdateSpellMetaData({
           spell: spell.name,
-          metaData: { ...spell.metaData, remainingUses: spell.metaData.preparedUses }
+          metaData: {
+            ...spell.metaData,
+            remainingUses: spell.metaData.preparedUses 
+          }
         }));
       }
     }

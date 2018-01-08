@@ -22,7 +22,7 @@ export class SpellLevelsEffects {
   spellLevelsFetch = this.actions
     .ofType(FETCH_SPELL_LEVELS)
     .switchMap((action: FetchSpellLevels) => {
-      return Observable.fromPromise(this.persistance.loadSpellLevels())
+      return Observable.fromPromise(this.persistance.fetchSpellLevels())
     }).map((spellLevels) => {
       return {
         type: SET_SPELL_LEVELS,
@@ -35,6 +35,6 @@ export class SpellLevelsEffects {
     .ofType(STORE_SPELL_LEVELS)
     .withLatestFrom(this.store.select('spellLevels'))
     .switchMap(([action, state]) => {
-      return Observable.fromPromise(this.persistance.saveSpellLevels(state.spellLevels));
+      return Observable.fromPromise(this.persistance.storeSpellLevels(state.spellLevels));
     });
 }

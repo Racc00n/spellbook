@@ -1,18 +1,24 @@
-import { RouterModule, RouterLink, RouterLinkWithHref } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
-import { SpellsSetupComponent } from './spells-setup.component';
-import { PersistanceService } from '../services/persistance.service';
-import { ModelService } from './../services/model.service';
-import { Spell } from '../model/spell';
-import { LevelPipe } from '../pipes/level.pipe';
+import { spellMocks } from './../model/spell.mock';
+import { SpellClass } from './../model/spell-class.enum';
+import { UpdateSpellMetaData } from './../stores/spell-meta-datas/spell-meta-datas.actions';
+import { Store } from '@ngrx/store';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
+
+import { StoreMock } from './../stores/store.mock';
+import { SpellsServiceMock } from './../services/spells.service.mock';
+import { RouterModule, RouterLink, RouterLinkWithHref } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { SpellsSetupComponent } from './spells-setup.component';
+import { Spell } from '../model/spell';
+import { LevelPipe } from '../pipes/level.pipe';
 import { SpellMetaData } from '../model/spell-meta-data';
 import { defaultSpellLevels } from '../data/default-spell-levels';
+import { SpellsService } from '../services/spells.service';
 
+import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
 @Component({ template: '' })
 export class DummyComponent {
 
@@ -20,17 +26,22 @@ export class DummyComponent {
 describe('SpellsSetupComponent', () => {
   let component: SpellsSetupComponent;
   let fixture: ComponentFixture<SpellsSetupComponent>;
-  let modelService: ModelService;
+  let spellsService: SpellsService;
   let spells: Spell[];
-
+  let store: StoreMock;
+  
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         SpellsSetupComponent,
         LevelPipe,
         DummyComponent],
-      providers: [PersistanceService, ModelService],
-      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([
+      providers: [
+        { provide: SpellsService, useClass: SpellsServiceMock },
+        { provide: Store, useClass: StoreMock }
+      ],
+      imports: [
+        RouterTestingModule.withRoutes([
         { path: 'spells-per-day', component: DummyComponent },
         { path: 'spells-use', component: DummyComponent }
       ])]
@@ -41,41 +52,23 @@ describe('SpellsSetupComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SpellsSetupComponent);
     component = fixture.componentInstance;
-    modelService = fixture.debugElement.injector.get(ModelService);
-    spells = [
-      <Spell>{
-        name: 'someSpell',
-        level: 'Sor/Wiz 1',
-        school: 'Conjuration',
-        components: 'V, S, M, F',
-        castingtime: '1 standard action',
-        range: 'Long (400 ft. + 40 ft./level)',
-        effect: 'One amazing spell',
-        duration: '1 round + 1 round per three levels',
-        savingthrow: 'None',
-        spellresistance: 'No',
-        description: 'An amazing spell that does nothing long text',
-        shortdescription: 'An Amazing spell that does nothing short text',
-        metaData: new SpellMetaData(true,3,0)
-      },
-      <Spell>{
-        name: 'someSpell 2',
-        level: 'Sor/Wiz 2',
-        school: 'Conjuration',
-        components: 'V, S',
-        castingtime: '1 standard action',
-        range: 'Long (400 ft. + 40 ft./level)',
-        effect: 'another amazing spell',
-        duration: '1 round + 1 round per three levels',
-        savingthrow: 'None',
-        spellresistance: 'No',
-        description: 'An amazing spell 2 that does nothing long text',
-        shortdescription: 'An Amazing spell 2 that does nothing short text',
-        metaData: new SpellMetaData(true,2,0)
-      }
-    ];
-    spyOnProperty(modelService, 'spells', 'get').and.returnValue(spells);
-    spyOnProperty(modelService, 'spellLevels', 'get').and.returnValue(defaultSpellLevels);
+    spellsService = fixture.debugElement.injector.get(SpellsService);
+    store = TestBed.get(Store);    
+    store.stateMap = {};
+    store.subjectsMap = {};
+    const state1 = <fromSpellLevels.State>{
+      selectedSpellLevelLabel: '1',
+      spellLevels: defaultSpellLevels
+    }
+    
+    store.stateMap['spellLevels'] = state1;
+    spells = [];
+    Object.assign(spells, spellMocks);
+    spells[0].metaData = new SpellMetaData(true,3,0);
+    spells[1].metaData = new SpellMetaData(true,2,0);
+    
+    spellsService.spells = spells;    
+    spellsService.spellClass = SpellClass.sorcererWizard;
     fixture.detectChanges();
   });
 
@@ -83,10 +76,9 @@ describe('SpellsSetupComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have spells defined', fakeAsync(() => {    
-    tick();
+  it('should have spells defined', () => {        
     expect(component.spells.length).toBeGreaterThan(0);
-  }));
+  });
   it('should include a router link to spells-per-day', ()=> {    
     const routerLinkElements = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
     const firstElementIndex = routerLinkElements.findIndex(de => de.properties['href'].includes('/spells-per-day'));
@@ -100,7 +92,49 @@ describe('SpellsSetupComponent', () => {
   it('should match the remainingUses to preparedUses of all spells when clicking on Replenish ', ()=> {    
     const debugElement = fixture.debugElement.query(By.css('button'));
     const replenishButton:HTMLButtonElement = debugElement.nativeElement;
+    const spy = spyOn(store,'dispatch');
     replenishButton.click();
-    expect(spells.filter((spell)=> spell.metaData.preparedUses === spell.metaData.remainingUses).length).toEqual(2);    
+    expect(spy).toHaveBeenCalledWith(new UpdateSpellMetaData({
+      spell: 'someSpell',
+      metaData: {...new SpellMetaData(true,3,3)}
+    }));    
   });
+  
+  it('should display spells of the correct level', () => {            
+    const spell = spells[0];
+    const debugRow = fixture.debugElement.query(By.css('tbody>tr'));
+    const debugUsesInput = debugRow.query(By.css('input[type="number"]'));
+    const debugKnown = debugRow.query(By.css('input[type="checkbox"]'));
+    
+    expect(+debugUsesInput.nativeElement.value).toEqual(spell.metaData.preparedUses);
+    expect(debugKnown.properties['checked']).toEqual(spell.metaData.known);                      
+  });
+  it('should display spells of the correct level after changing the level', fakeAsync(() => {            
+    const state2 = <fromSpellLevels.State>{
+      selectedSpellLevelLabel: '2',
+      spellLevels: defaultSpellLevels
+    }; 
+    store.select('spellLevels').next(state2);
+    fixture.detectChanges();
+    tick();
+    const spell = spells[1];
+    const debugRow = fixture.debugElement.query(By.css('tbody>tr'));
+    const debugUsesInput = debugRow.query(By.css('input[type="number"]'));
+    const debugKnown = debugRow.query(By.css('input[type="checkbox"]'));
+    
+    expect(+debugUsesInput.nativeElement.value).toEqual(spell.metaData.preparedUses);
+    expect(debugKnown.properties['checked']).toEqual(spell.metaData.known);              
+  }));
+
+  it('should update total allowed spells according to spell level ', fakeAsync(() => {            
+    defaultSpellLevels[2].numOfSpells = 4;
+    const state2 = <fromSpellLevels.State>{
+      selectedSpellLevelLabel: '2',
+      spellLevels: defaultSpellLevels
+    }; 
+    store.select('spellLevels').next(state2);
+    fixture.detectChanges();
+    tick();
+    expect(component.totalAllowedSpells).toBe(4);
+  }));
 });

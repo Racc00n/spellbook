@@ -24,7 +24,7 @@ export class SpellMetaDatasEffects {
     .ofType(FETCH_SPELL_META_DATAS)
     .switchMap((action: FetchSpellMetaDatas) => {
       return Observable.fromPromise(
-        this.persistance.loadSpellsMetaDataByClass(
+        this.persistance.fetchSpellsMetaDataByClass(
           this.spellsService.spellClass
         )
       );
@@ -41,7 +41,7 @@ export class SpellMetaDatasEffects {
     .withLatestFrom(this.store.select('spellMetaDatas'))
     .switchMap(([action, state]) => {
       return Observable.fromPromise(
-        this.persistance.saveSpellsMetaDataByClass(
+        this.persistance.storeSpellsMetaDataByClass(
           state.spellMetaDatas,
           this.spellsService.spellClass
         )

@@ -13,7 +13,7 @@ export class PersistanceService {
   static SPELLS_METADATA = 'spellsMetaData';
   constructor(private http: HttpClient) { }
 
-  loadSpellLevels(): Promise<SpellLevel[]> {
+  fetchSpellLevels(): Promise<SpellLevel[]> {
     const result = new Promise<SpellLevel[]>((resolve, reject) => {
       try {
         const spellLevels = <SpellLevel[]>JSON.parse(localStorage.getItem(PersistanceService.SPELL_LEVELS));
@@ -25,7 +25,7 @@ export class PersistanceService {
     return result;
   }
 
-  saveSpellLevels(spellLevels: SpellLevel[]): Promise<void> {
+  storeSpellLevels(spellLevels: SpellLevel[]): Promise<void> {
     const result = new Promise<void>((resolve, reject) => {
       try {
         (localStorage.setItem(PersistanceService.SPELL_LEVELS, JSON.stringify(spellLevels)));
@@ -43,7 +43,7 @@ export class PersistanceService {
         try {
           const spells: Spell[] = data.spells;
           const filteredSpells = spells.filter(spell => spell.level.includes(spellClass));
-          resolve(spells);
+          resolve(filteredSpells);
         } catch (error) {
           reject('could not load spells ' + error);
         } finally {
@@ -54,7 +54,7 @@ export class PersistanceService {
     return result;
   }
 
-  saveSpellsMetaDataByClass(spellsMetaData: { [spell: string]: SpellMetaData }, spellClass: SpellClass): Promise<void> {
+  storeSpellsMetaDataByClass(spellsMetaData: { [spell: string]: SpellMetaData }, spellClass: SpellClass): Promise<void> {
     const result = new Promise<void>((resolve, reject) => {
       try {
         (localStorage.setItem(PersistanceService.SPELLS_METADATA + spellClass, JSON.stringify(spellsMetaData)));
@@ -66,7 +66,7 @@ export class PersistanceService {
     return result;
   }
 
-  loadSpellsMetaDataByClass(spellClass: SpellClass): Promise<{ [spell: string]: SpellMetaData }> {
+  fetchSpellsMetaDataByClass(spellClass: SpellClass): Promise<{ [spell: string]: SpellMetaData }> {
     const result = new Promise<{ [spell: string]: SpellMetaData }>((resolve, reject) => {
       try {
         const spellMetaData: { [spell: string]: SpellMetaData } =

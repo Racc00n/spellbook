@@ -11,10 +11,10 @@ import * as fromSpellMetaDatas from './../stores/spell-meta-datas/spell-meta-dat
 
 @Injectable()
 export class SpellsService {
-  subscription;
-  spellMetaDatasState:Observable<fromSpellMetaDatas.State>
-  spells:Spell[];
-  spellsIndex:{[name:string]: Spell};//for performance purposes.
+  private subscription;
+  private spellsIndex:{[name:string]: Spell};//for performance purposes.
+  private spellMetaDatasState:Observable<fromSpellMetaDatas.State>
+  spells:Spell[];  
   spellClass:SpellClass;
 
   constructor(private store: Store<AppState>,
