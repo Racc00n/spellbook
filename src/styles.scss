@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 $fa-font-path:   "/node_modules/font-awesome/scss/font";
+
 h1 {
     position:sticky;
     top:0;
@@ -9,7 +10,24 @@ h1 {
     padding-bottom: 0.5rem;
 }
 
+.content {
+  width: 90vw;
+  overflow-x: auto;
+}
+
 button {
     cursor:  pointer;
+}
+
+input[type=number] {
+  min-width: 3.5rem;
+}
+
+@media screen and (max-aspect-ratio: 5/4) {  
+  input[type=number] { //fixes lack spinner padding on mobile
+    padding-left: initial !important;
+    padding-right: initial !important;
+  }
+  
 }
 
