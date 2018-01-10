@@ -1,5 +1,6 @@
+import { SpellsService } from './services/spells.service';
+import { SpellMetaDatasEffects } from './stores/spell-meta-datas/spell-meta-datas.effects';
 import { AppRoutingModule } from './app-routing.module';
-import { ModelService } from './services/model.service';
 import { PersistanceService } from './services/persistance.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -13,6 +14,10 @@ import { SpellsUseComponent } from './spells-use/spells-use.component';
 import { KnownPipe } from './pipes/known.pipe';
 import { RemainingUsesPipe } from './pipes/remaining-uses.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { SpellLevelsEffects } from './stores/spell-levels/spell-levels.effects';
+import { reducers } from './stores/app.reducers';
 
 @NgModule({
   declarations: [
@@ -22,11 +27,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([SpellLevelsEffects, SpellMetaDatasEffects])
   ],
   providers: [
     PersistanceService,
-    ModelService
+    SpellsService    
   ],
   bootstrap: [AppComponent]
 })

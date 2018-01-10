@@ -3,27 +3,25 @@
     Spells Per Day
     <a title="Spells Setup" [routerLink]="['/spells-setup']"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
   </h1>
-  <div >
+  <div class="content" >
     <table class="table">
       <thead>
         <tr class="thead-light">
           <th>Level</th>
-          <th *ngFor="let level of levels">{{level.label}}
-            <span></span>
-          </th>
+          <th *ngFor="let level of (spellLevelsState | async).spellLevels">{{level.label}}</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Spells</td>
-          <td *ngFor="let level of levels">
+          <td *ngFor="let level of (spellLevelsState | async).spellLevels; let i = index">
             <input 
               class="form-control" 
               type="number" 
               min="0" 
               max="30" 
-              [value]="level.numOfSpells" 
-              (input)="level.numOfSpells = $event.target.value">
+              [value]="level.numOfSpells"               
+              (focusout)="onSpellLevelChange(i, level, +$event.target.value)">
           </td>
         </tr>
       </tbody>
