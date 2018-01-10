@@ -65,4 +65,8 @@ export class SpellsUseComponent implements OnInit, OnDestroy {
         })
     );    
   }
+
+  onSpellInfoClicked(spell:Spell) {
+    alert(spell.description);
+  }
 }

@@ -29,7 +29,9 @@
             <button class="btn btn-fab btn-primary" (click)="castSpellClicked(spell)">Cast</button>
           </td>
           <td>{{spell.name}}</td>
-          <td>{{spell.shortdescription}}</td>
+          <td (click)="onSpellInfoClicked(spell)">{{spell.shortdescription}}<br>
+            <i class="fa  fa-ellipsis-h" aria-hidden="true"></i>
+          </td>
           <td>{{spell.school}}</td>
           <td>{{spell.components}}</td>
           <td>{{spell.castingtime}}</td>

@@ -35,7 +35,9 @@
         <td><input [disabled]="!spell.metaData.known" class="form-control" type="number" min="0" [value]="spell.metaData.preparedUses" (input)="onPreparedUsesChanged(spell, $event)"></td>
         <td><input class="form-control" type="checkbox" [checked]="spell.metaData.known" (change)="onSpellKnownChange(spell)"></td>
         <td>{{spell.name}}</td>
-        <td>{{spell.shortdescription}}</td>
+        <td (click)="onSpellInfoClicked(spell)">{{spell.shortdescription}}<br>
+          <i class="fa  fa-ellipsis-h" aria-hidden="true"></i>
+        </td>
         <td>{{spell.school}}</td>
         <td>{{spell.components}}</td>
         <td>{{spell.castingtime}}</td>

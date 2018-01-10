@@ -114,6 +114,9 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
     const metaData: SpellMetaData = { ...spell.metaData, known: !spell.metaData.known };
     this.store.dispatch(new UpdateSpellMetaData({ spell: spell.name, metaData }));
   }
+  onSpellInfoClicked(spell:Spell) {
+    alert(spell.description);
+  }
 
 
 }
