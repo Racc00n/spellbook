@@ -1,12 +1,12 @@
 import { AppPage } from './app.po';
-import { Key, browser } from 'protractor';
+import { Key, browser, protractor } from 'protractor';
 import { timeout } from 'q';
 
 describe('spellbook App', () => {
   let page: AppPage;
 
   beforeEach(() => {
-    page = new AppPage();
+    page = new AppPage();        
   });
   describe('Navigation',()=> {
     it('should display Spells Per Day', () => {
@@ -35,12 +35,18 @@ describe('spellbook App', () => {
     });
   });
 
-  describe('Usage',() => {
-    it('should set spellLevel for level 0 to 10 and see it in spell setup (max allowed)', () => {      
+  describe('Usage',() => {    
+    it('should set spellLevel for level 0 to 10 and see it in spell setup (max allowed)', () => {    
+      page.navigateTo();  
       page.getFirstInput().sendKeys(Key.CONTROL, 'a', Key.NULL,'10');      
       page.getRightChevron().click();
       expect(page.getFirstLabel().getText()).toContain('/10)');
     });
+    it('should click on the description of a spell and open an alert', () => {    
+      page.getFirstElipsisIcon().click();
+      browser.wait(protractor.ExpectedConditions.alertIsPresent(), 1000);      
+      browser.switchTo().alert().accept();
+    })
     it('should set 2 prepared uses on first spell and see it on total Perpared count and on spells uses', () => {      
       page.getFirstCheckBox().click();      
       page.getFirstInput().sendKeys(Key.CONTROL, 'a', Key.NULL,'2');      
@@ -50,13 +56,12 @@ describe('spellbook App', () => {
     });
     it('should click cast once (spell uses) and see that the number of uses is reduced to 1 ', () => {      
       page.getFirstButton().click();
-      expect(page.getFirstTd().getText()).toBe('1');
-      browser.sleep(500);
+      expect(page.getFirstTd().getText()).toBe('1');      
     });
     it('should click another time (spell uses) and see that the item is removed ', () => {      
-      page.getFirstButton().click();
-      browser.sleep(500);      
+      page.getFirstButton().click();          
       expect(page.getTrCount()).toBe(0);
     });
+    
   });
 });

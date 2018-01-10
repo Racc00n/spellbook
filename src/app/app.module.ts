@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { PersistanceService } from './services/persistance.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { AnimationsModule } from './animations/animations.module';
 import { AppComponent } from './app.component';
 import { SpellPerDayComponent } from './spell-per-day/spell-per-day.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -27,7 +27,7 @@ import { reducers } from './stores/app.reducers';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
+    AnimationsModule.forRoot(),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([SpellLevelsEffects, SpellMetaDatasEffects])
   ],

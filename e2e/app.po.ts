@@ -1,8 +1,10 @@
 import { browser, by, element } from 'protractor';
 
 export class AppPage {
-  navigateTo() {
-    return browser.get('/');
+  navigateTo() {        
+      let result = browser.get('/?qa=true');
+      browser.waitForAngular();
+      return result;
   }
 
   getParagraphText() {
@@ -42,5 +44,9 @@ export class AppPage {
 
   getTrCount() {
     return element.all(by.css('tr')).count();
+  }
+
+  getFirstElipsisIcon(){
+    return element.all(by.css('td:nth-child(n+4)')).first();
   }
 }
