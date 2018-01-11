@@ -6,17 +6,43 @@ import { Spell } from './../model/spell';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+export const SPELL_LEVELS = 'spellLevels';
+export const SPELLS_METADATA = 'spellsMetaData';
+export const SPELL_CLASS = 'spellClass';
 
 @Injectable()
 export class PersistanceService {
-  static SPELL_LEVELS = 'spellLevels';
-  static SPELLS_METADATA = 'spellsMetaData';
+
   constructor(private http: HttpClient) { }
 
-  fetchSpellLevels(): Promise<SpellLevel[]> {
+  fetchSpellClass(): Promise<SpellClass> {
+    const result = new Promise<SpellClass>((resolve, reject) => {
+      try {
+        const spellClass = <SpellClass>JSON.parse(localStorage.getItem(SPELL_CLASS));
+        spellClass ? resolve(spellClass) : resolve(SpellClass.sorcererWizard);
+      } catch (error) {
+        reject('Unable to load spellClass: ' + error);
+      }
+    });
+    return result;
+  }
+
+  storeSpellClass(spellClass: SpellClass): Promise<void> {
+    const result = new Promise<void>((resolve, reject) => {
+      try {
+        (localStorage.setItem(SPELL_CLASS, JSON.stringify(spellClass)));
+        resolve();
+      } catch (error) {
+        reject('Unable to save spellClass: ' + error);
+      }
+    });
+    return result;
+  }
+
+  fetchSpellLevelsByClass(spellClass: SpellClass): Promise<SpellLevel[]> {
     const result = new Promise<SpellLevel[]>((resolve, reject) => {
       try {
-        const spellLevels = <SpellLevel[]>JSON.parse(localStorage.getItem(PersistanceService.SPELL_LEVELS));
+        const spellLevels = <SpellLevel[]>JSON.parse(localStorage.getItem(SPELL_LEVELS + spellClass));
         spellLevels ? resolve(spellLevels) : resolve(defaultSpellLevels);
       } catch (error) {
         reject('Unable to load spellLevels: ' + error);
@@ -25,10 +51,10 @@ export class PersistanceService {
     return result;
   }
 
-  storeSpellLevels(spellLevels: SpellLevel[]): Promise<void> {
+  storeSpellLevelsByClass(spellLevels: SpellLevel[], spellClass: SpellClass): Promise<void> {
     const result = new Promise<void>((resolve, reject) => {
       try {
-        (localStorage.setItem(PersistanceService.SPELL_LEVELS, JSON.stringify(spellLevels)));
+        (localStorage.setItem(SPELL_LEVELS + spellClass, JSON.stringify(spellLevels)));
         resolve();
       } catch (error) {
         reject('Unable to save spellLevels: ' + error);
@@ -57,7 +83,7 @@ export class PersistanceService {
   storeSpellsMetaDataByClass(spellsMetaData: { [spell: string]: SpellMetaData }, spellClass: SpellClass): Promise<void> {
     const result = new Promise<void>((resolve, reject) => {
       try {
-        (localStorage.setItem(PersistanceService.SPELLS_METADATA + spellClass, JSON.stringify(spellsMetaData)));
+        (localStorage.setItem(SPELLS_METADATA + spellClass, JSON.stringify(spellsMetaData)));
         resolve();
       } catch (error) {
         reject('Unable to save spells metadata: ' + error);
@@ -70,7 +96,7 @@ export class PersistanceService {
     const result = new Promise<{ [spell: string]: SpellMetaData }>((resolve, reject) => {
       try {
         const spellMetaData: { [spell: string]: SpellMetaData } =
-          JSON.parse(localStorage.getItem(PersistanceService.SPELLS_METADATA + spellClass)) || {};
+          JSON.parse(localStorage.getItem(SPELLS_METADATA + spellClass)) || {};
         resolve(spellMetaData);
       } catch (error) {
         reject('Unable to load SpellMetaDatas: ' + error);

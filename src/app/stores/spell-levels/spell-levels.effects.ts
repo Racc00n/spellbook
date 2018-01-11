@@ -1,3 +1,4 @@
+import { SpellsService } from './../../services/spells.service';
 import { AppState } from './../app.reducers';
 import { SpellLevel } from './../../model/spell-level';
 import { Observable } from 'rxjs/Observable';
@@ -16,13 +17,14 @@ export class SpellLevelsEffects {
 
   constructor(private actions: Actions,
               private store: Store<AppState>,
-              private persistance: PersistanceService) { }
+              private persistance: PersistanceService,
+              private spellsService:SpellsService) { }
 
   @Effect()
   spellLevelsFetch = this.actions
     .ofType(FETCH_SPELL_LEVELS)
     .switchMap((action: FetchSpellLevels) => {
-      return Observable.fromPromise(this.persistance.fetchSpellLevels())
+      return Observable.fromPromise(this.persistance.fetchSpellLevelsByClass(this.spellsService.spellClass));
     }).map((spellLevels) => {
       return {
         type: SET_SPELL_LEVELS,
@@ -35,6 +37,6 @@ export class SpellLevelsEffects {
     .ofType(STORE_SPELL_LEVELS)
     .withLatestFrom(this.store.select('spellLevels'))
     .switchMap(([action, state]) => {
-      return Observable.fromPromise(this.persistance.storeSpellLevels(state.spellLevels));
+      return Observable.fromPromise(this.persistance.storeSpellLevelsByClass(state.spellLevels, this.spellsService.spellClass));
     });
 }

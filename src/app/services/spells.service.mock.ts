@@ -5,12 +5,12 @@ import { Spell } from '../model/spell';
 import { SpellClass } from '../model/spell-class.enum';
 import { Store } from '@ngrx/store';
 
-export class SpellsServiceMock{
-  spells:Spell[];  
-  spellClass:SpellClass;
-  
-  constructor() {}
-  
+export class SpellsServiceMock {
+  spells: Spell[];
+  spellClass: SpellClass;
+
+  constructor() { }
+
   public init() {
   }
 

@@ -12,13 +12,13 @@ import * as fromSpellMetaDatas from './../stores/spell-meta-datas/spell-meta-dat
 @Injectable()
 export class SpellsService {
   private subscription;
-  private spellsIndex:{[name:string]: Spell};//for performance purposes.
-  private spellMetaDatasState:Observable<fromSpellMetaDatas.State>
-  spells:Spell[];  
-  spellClass:SpellClass;
+  private spellsIndex: { [name: string]: Spell }; // for performance purposes.
+  private spellMetaDatasState: Observable<fromSpellMetaDatas.State>;
+  spells: Spell[];
+  spellClass: SpellClass;
 
   constructor(private store: Store<AppState>,
-              private persistance:PersistanceService) { 
+    private persistance: PersistanceService) {
     this.spells = [];
     this.spellsIndex = {};
     this.spellClass = SpellClass.sorcererWizard;
@@ -26,23 +26,23 @@ export class SpellsService {
 
   public init() {
     this.spellMetaDatasState = this.store.select('spellMetaDatas');
-    this.populateSpells();    
+    this.populateSpells();
   }
-  
+
   private async populateSpells() {
     this.spellsIndex = {};
     const spellsReponse = await this.persistance.getSpellsByClass(this.spellClass);
     this.spells.push(...spellsReponse);
     this.spells.map(spell => {
-      spell.metaData = new SpellMetaData()
+      spell.metaData = new SpellMetaData();
       this.spellsIndex[spell.name] = spell;
     });
     this.store.dispatch(new FetchSpellMetaDatas());
     this.subscription = this.subscription ||
-     this.spellMetaDatasState.subscribe(spellMetaDataState => {
-      for(let spell in spellMetaDataState.spellMetaDatas) {
-        this.spellsIndex[spell].metaData = spellMetaDataState.spellMetaDatas[spell];
-      }
-    });
-  } 
+      this.spellMetaDatasState.subscribe(spellMetaDataState => {
+        for (let spell in spellMetaDataState.spellMetaDatas) {
+          this.spellsIndex[spell].metaData = spellMetaDataState.spellMetaDatas[spell];
+        }
+      });
+  }
 }
