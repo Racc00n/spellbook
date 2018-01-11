@@ -27,8 +27,7 @@ export class SpellPerDayComponent implements OnInit, OnDestroy {
     this.store.dispatch(new StoreSpellLevels());    
   }
 
-  onSpellLevelChange(index: number, level: SpellLevel, value: number) {
-    const numOfSpells = isNaN(value) ? 0 : value;
+  onSpellLevelChange(index: number, level: SpellLevel, numOfSpells: number) {    
     this.store.dispatch(new UpdateSpellLevel({
        index,
        numOfSpells

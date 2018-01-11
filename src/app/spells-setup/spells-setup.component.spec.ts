@@ -1,3 +1,5 @@
+import { MoreDetailComponent } from './../shared/components/more-detail/more-detail.component';
+import { NumberPickerComponent } from './../shared/components/number-picker/number-picker.component';
 import { spellMocks } from './../model/spell.mock';
 import { SpellClass } from './../model/spell-class.enum';
 import { UpdateSpellMetaData } from './../stores/spell-meta-datas/spell-meta-datas.actions';
@@ -35,7 +37,10 @@ describe('SpellsSetupComponent', () => {
       declarations: [
         SpellsSetupComponent,
         LevelPipe,
-        DummyComponent],
+        DummyComponent,
+        NumberPickerComponent,
+        MoreDetailComponent
+      ],
       providers: [
         { provide: SpellsService, useClass: SpellsServiceMock },
         { provide: Store, useClass: StoreMock }
@@ -103,11 +108,12 @@ describe('SpellsSetupComponent', () => {
   it('should display spells of the correct level', () => {            
     const spell = spells[0];
     const debugRow = fixture.debugElement.query(By.css('tbody>tr'));
-    const debugUsesInput = debugRow.query(By.css('input[type="number"]'));
-    const debugKnown = debugRow.query(By.css('input[type="checkbox"]'));
+    const debugUsesInput = debugRow.query(By.directive(NumberPickerComponent)).componentInstance;
+    const debugKnown = debugRow.query(By.css('td>i'));
     
-    expect(+debugUsesInput.nativeElement.value).toEqual(spell.metaData.preparedUses);
-    expect(debugKnown.properties['checked']).toEqual(spell.metaData.known);                      
+    expect(debugUsesInput.value).toEqual(spell.metaData.preparedUses);        
+    expect(debugKnown.classes['fa-check-square']).toEqual(true);                      
+    expect(debugKnown.classes['fa-square-o']).toEqual(false);                              
   });
   it('should display spells of the correct level after changing the level', fakeAsync(() => {            
     const state2 = <fromSpellLevels.State>{
@@ -119,11 +125,11 @@ describe('SpellsSetupComponent', () => {
     tick();
     const spell = spells[1];
     const debugRow = fixture.debugElement.query(By.css('tbody>tr'));
-    const debugUsesInput = debugRow.query(By.css('input[type="number"]'));
-    const debugKnown = debugRow.query(By.css('input[type="checkbox"]'));
+    const debugUsesInput = debugRow.query(By.directive(NumberPickerComponent)).componentInstance;
+    const debugKnown = debugRow.query(By.css('td>i'));
     
-    expect(+debugUsesInput.nativeElement.value).toEqual(spell.metaData.preparedUses);
-    expect(debugKnown.properties['checked']).toEqual(spell.metaData.known);              
+    expect(debugUsesInput.value).toEqual(spell.metaData.preparedUses);
+    expect(debugKnown.classes['fa-check-square']).toEqual(true);             
   }));
 
   it('should update total allowed spells according to spell level ', fakeAsync(() => {            

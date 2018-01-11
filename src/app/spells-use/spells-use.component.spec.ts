@@ -1,3 +1,4 @@
+import { MoreDetailComponent } from './../shared/components/more-detail/more-detail.component';
 import { spellMocks } from './../model/spell.mock';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
@@ -35,6 +36,7 @@ describe('SpellsUseComponent', () => {
       declarations: [
         SpellsUseComponent,
         RemainingUsesPipe,
+        MoreDetailComponent,
         KnownPipe,
         LevelPipe,
         DummyComponent        

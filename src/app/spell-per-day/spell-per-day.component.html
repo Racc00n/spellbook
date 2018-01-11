@@ -15,13 +15,19 @@
         <tr>
           <td>Spells</td>
           <td *ngFor="let level of (spellLevelsState | async).spellLevels; let i = index">
-            <input 
+            <!-- <input 
               class="form-control" 
               type="number" 
               min="0" 
               max="30" 
               [value]="level.numOfSpells"               
-              (focusout)="onSpellLevelChange(i, level, +$event.target.value)">
+              (focusout)="onSpellLevelChange(i, level, +$event.target.value)"> -->
+            <app-number-picker
+              [min]="0" 
+              [max]="30"
+              [value]="level.numOfSpells" 
+              (input)="onSpellLevelChange(i, level, $event)">
+            </app-number-picker>
           </td>
         </tr>
       </tbody>

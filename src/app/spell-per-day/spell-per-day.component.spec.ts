@@ -17,6 +17,7 @@ import { Store } from '@ngrx/store';
 
 import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
 import { UpdateSpellLevel } from '../stores/spell-levels/spell-levels.actions';
+import { NumberPickerComponent } from '../shared/components/number-picker/number-picker.component';
 @Component({
   template: ''
 })
@@ -30,7 +31,11 @@ describe('SpellPerDayComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SpellPerDayComponent, DummyComponent],
+      declarations: [
+        SpellPerDayComponent,
+        DummyComponent,
+        NumberPickerComponent
+      ],
       providers: [
         { provide: SpellsService, useClass: SpellsServiceMock },
         { provide: Store, useClass: StoreMock }
@@ -101,15 +106,15 @@ describe('SpellPerDayComponent', () => {
 
     it('should display the spell levels num of spells in the inputs ', () => {      
       const elements = fixture.debugElement.queryAll(By.css('tr>td'));
-      const input = (<HTMLInputElement>elements[1].children[0].nativeElement);
-      expect(elements.length).toEqual(defaultSpellLevels.length + 1);      
-      expect(+input.value).toEqual(defaultSpellLevels[0].numOfSpells);
+      const input = elements[1].query(By.directive(NumberPickerComponent)).componentInstance;
+      expect(elements.length).toEqual(defaultSpellLevels.length + 1);            
+      expect(input.value).toEqual(defaultSpellLevels[0].numOfSpells);
     });
 
-    it('should trigger the onSpellChange function when focusing out of an input', () => {      
+    it('should trigger the onSpellChange function when firing an input event from the input', () => {      
       const spy = spyOn(component, 'onSpellLevelChange');
-      const inputElement: HTMLInputElement = fixture.debugElement.query(By.css('td>input')).nativeElement;
-      inputElement.dispatchEvent(new Event('focusout'));
+      const input = fixture.debugElement.query(By.directive(NumberPickerComponent)).nativeElement;
+      input.dispatchEvent(new Event('input'));
       expect(spy).toHaveBeenCalled();
     });
   });

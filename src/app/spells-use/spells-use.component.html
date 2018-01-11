@@ -22,15 +22,14 @@
       </thead>
 
       <tbody #tbody>
-        <tr [@spellRemoval] (@spellRemoval.done)="spellRemovalDone(tbody.children.length === 0)" *ngFor="let spell of spells | level: spellLevel.label | known | remainingUses"
-          [title]="spell.description">
+        <tr [@spellRemoval] (@spellRemoval.done)="spellRemovalDone(tbody.children.length === 0)" *ngFor="let spell of spells | level: spellLevel.label | known | remainingUses">
           <td>{{spell.metaData.remainingUses}}</td>
           <td>
             <button class="btn btn-fab btn-primary" (click)="castSpellClicked(spell)">Cast</button>
           </td>
           <td>{{spell.name}}</td>
-          <td (click)="onSpellInfoClicked(spell)">{{spell.shortdescription}}<br>
-            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+          <td >{{spell.shortdescription}}<br>
+            <app-more-detail [text]="spell.description"></app-more-detail>          
           </td>
           <td>{{spell.school}}</td>
           <td>{{spell.components}}</td>

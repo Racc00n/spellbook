@@ -74,22 +74,12 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
     this.store.dispatch(new UpdateSelectedSpellLevelLabel(newLevelLabel));   
   }
 
-  onPreparedUsesChanged(spell: Spell, event: any) {
-    let newValue: number = +event.target.value;
-    const oldValue: number = spell.metaData.preparedUses;
-    if (isNaN(newValue)) {
-      newValue = 0;
-      event.target.value = newValue;
-    } else if (this.totalPreparedSpells + newValue - oldValue > this.totalAllowedSpells) {
-      newValue = oldValue;
-      event.target.value = newValue;
-    }
+  onPreparedUsesChanged(spell: Spell, newValue: number) {   
+    this.totalPreparedSpells += newValue - spell.metaData.preparedUses;
     this.store.dispatch(new UpdateSpellMetaData({
       spell: spell.name,
       metaData: { ...spell.metaData, preparedUses: newValue, remainingUses: newValue }
-    }));
-
-    this.totalPreparedSpells += newValue - oldValue;
+    }));   
   }
 
   onReplenishClicked() {
