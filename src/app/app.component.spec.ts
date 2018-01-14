@@ -49,11 +49,9 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should init the spellsService and fetch spellLevels', () => {
-    const storeDispatchSpy = spyOn(store,'dispatch');
+  it('should init the spellsService', () => {
     const initSpy = spyOn(spellsService,'init');
-    fixture.detectChanges();
-    expect(storeDispatchSpy).toHaveBeenCalledWith(new FetchSpellLevels());
+    fixture.detectChanges();    
     expect(initSpy).toHaveBeenCalled();
   });
 

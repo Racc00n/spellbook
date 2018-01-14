@@ -14,7 +14,9 @@ export class SpellsServiceMock {
   public init() {
   }
 
-  private populateSpells() {
+  public save(){
+    
   }
+
 
 }

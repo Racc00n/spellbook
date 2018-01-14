@@ -20,13 +20,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.spellsService.init();
-    this.store.dispatch(new FetchSpellLevels());
+    this.spellsService.init();    
     window.addEventListener('beforeunload', () => this.storeAll());
   }
 
   storeAll() {
     this.store.dispatch(new StoreSpellMetaDatas());
-    this.store.dispatch(new StoreSpellLevels());
+    this.store.dispatch(new StoreSpellLevels());    
+    this.spellsService.save();
   }
 }

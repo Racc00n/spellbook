@@ -18,6 +18,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { SpellLevelsEffects } from './stores/spell-levels/spell-levels.effects';
 import { reducers } from './stores/app.reducers';
+import { SpellClassSelectionComponent } from './spell-class-selection/spell-class-selection.component';
 
 @NgModule({
   declarations: [

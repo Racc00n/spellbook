@@ -12,7 +12,7 @@ import { SharedModule } from '../shared/shared.module';
     SharedModule
   ],
   declarations: [
-    SpellsSetupComponent,    
+    SpellsSetupComponent
   ],
 })
 export class SpellsSetupModule { }

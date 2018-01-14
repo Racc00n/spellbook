@@ -6,7 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 
 const appRoutes: Routes = [
-  { path: '', redirectTo:'/spells-per-day', pathMatch: 'full'},
+  { path: '', redirectTo:'/spell-class-selection', pathMatch: 'full'},
+  { path: 'spell-class-selection', loadChildren: './spell-class-selection/spell-class-selection.module#SpellClassSelectionModule'},
   { path: 'spells-per-day', loadChildren: './spell-per-day/spell-per-day.module#SpellPerDayModule'},
   { path: 'spells-setup', loadChildren: './spells-setup/spells-setup.module#SpellsSetupModule' },
   { path: 'spells-use', loadChildren: './spells-use/spells-use.module#SpellsUseModule' }
