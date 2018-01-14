@@ -18,6 +18,10 @@ table {
     margin-top: 0.5rem;
 }
 
-.alert-success {
-    margin-top: 1rem;
+.alert-success {    
+    margin-bottom: 0;
+    position: fixed;       
+    bottom: 0;
+    right: 0;
+    left: 0;    
 }

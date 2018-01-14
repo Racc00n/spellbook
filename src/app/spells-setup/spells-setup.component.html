@@ -9,10 +9,7 @@
     <option value="" disabled selected>Select</option>
     <option *ngFor="let spellLevel of (spellLevelsState | async).spellLevels" [value]="spellLevel.label">{{spellLevel.label}}</option>
   </select>
-  <button class="btn btn-success" (click)="onReplenishClicked()">Replenish</button>
-</div>
-<div [@alert] *ngIf="replenishClicked" class="alert alert-success" role="alert">
-  All your spells have been replenished
+  <button class="btn btn-success" (click)="onReplenishClicked()" [disabled]="replenishClicked">Replenish</button>
 </div>
 <div class="content">
   <table class="table">
@@ -60,4 +57,7 @@
       </tr>
     </tbody>
   </table>
+  <div [@alert]  *ngIf="replenishClicked" class="alert alert-success" role="alert">
+    All your spells have been replenished
+  </div>
 </div>

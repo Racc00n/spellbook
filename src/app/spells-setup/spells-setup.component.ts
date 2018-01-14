@@ -17,22 +17,22 @@ import { Subscription } from 'rxjs/Subscription';
   selector: 'app-spells-setup',
   templateUrl: './spells-setup.component.html',
   styleUrls: ['./spells-setup.component.scss'],
-  animations: [
-    trigger('alert', [
-      state('in', style({
-        opacity: 0,
-      })),
-      transition('* => void', [
-        animate(250, style({
-          opacity: 0
-        }))
-      ]),
-      transition('void => *', [
-        animate(250, style({
-          opacity: 1
-        }))
-      ])
-    ]),
+  animations: [    
+    trigger(
+      'alert',
+      [
+        transition(
+        ':enter', [
+          style({transform: 'translateY(100%)'}),
+          animate(250, style({transform: 'translateY(0)'}))
+        ]),
+        transition(
+        ':leave', [
+          style({transform: 'translateY(0)',}),
+          animate(250, style({transform: 'translateY(100%)'}))          
+        ])
+      ]
+    )
   ]
 })
 export class SpellsSetupComponent implements OnInit, OnDestroy {
@@ -44,7 +44,9 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
   replenishClicked: boolean;
 
   constructor(private store: Store<AppState>,
-    private spellService: SpellsService) { }
+    private spellService: SpellsService) { 
+      
+    }
 
   ngOnInit() {
     this.spellLevelsState = this.store.select('spellLevels');
@@ -97,7 +99,7 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
     this.replenishClicked = true;
     setTimeout(() => {
       this.replenishClicked = false;
-    }, 2000);
+    }, 1500);
   }
 
   onSpellKnownChange(spell: Spell) {
@@ -107,6 +109,4 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
   onSpellInfoClicked(spell:Spell) {
     alert(spell.description);
   }
-
-
 }
