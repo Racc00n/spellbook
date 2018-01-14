@@ -32,7 +32,7 @@ export class AppPage {
   }
 
   getFirstCheckBox(){
-    return element.all(by.css('input[type="checkbox"]')).first();
+    return element.all(by.css('i.fa-square-o')).first();
   }
   getFirstButton(){
     return element.all(by.css('button')).first();
@@ -47,6 +47,14 @@ export class AppPage {
   }
 
   getFirstElipsisIcon(){
-    return element.all(by.css('td:nth-child(n+4)')).first();
+    return element.all(by.css('td:nth-child(n+4) i')).first();
+  }
+
+  getFirstMinus() {
+    return element.all(by.css('.fa-minus-circle')).first();
+  }
+
+  getFirstPlus() {
+    return element.all(by.css('.fa-plus-circle')).first();
   }
 }
