@@ -1,22 +1,28 @@
-import { SpellsService } from './../services/spells.service';
+import { AppState } from './../stores/app.reducers';
 import { Pipe, PipeTransform } from '@angular/core';
 import { Spell } from '../model/spell';
-
+import { Store } from '@ngrx/store';
+import 'rxjs/add/operator/take';
 
 @Pipe({
   name: 'level'
 })
 export class LevelPipe implements PipeTransform {
-  constructor(private spellsService: SpellsService) {
+  constructor(private store: Store<AppState>) {
 
   }
   transform(spells: Spell[], level: string): Spell[] {
     if (!level || level.length === 0){
       return [];
     }
-    return spells.filter(spell =>
-      spell.level.includes(this.spellsService.spellClass + ' ' + level)
-    );    
-  }
+    
+    let result:Spell[];
 
+    this.store.select('spells').take(1).subscribe(state => {      
+      result =  spells.filter(spell =>      
+        spell.level.includes(state.spellClass + ' ' + level)
+      );    
+    });
+    return result;    
+  }
 }

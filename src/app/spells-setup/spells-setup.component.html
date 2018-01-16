@@ -28,7 +28,7 @@
       <th>Spell Resistance</th>
     </thead>
     <tbody>
-      <tr *ngFor="let spell of spells | level: (spellLevelsState | async).selectedSpellLevelLabel">
+      <tr *ngFor="let spell of (spellsState | async). | level: (spellLevelsState | async).selectedSpellLevelLabel">
         <td>
           <!-- <input [disabled]="!spell.metaData.known" class="form-control" type="number" min="0" [value]="spell.metaData.preparedUses" (input)="onPreparedUsesChanged(spell, $event)"> -->
           <app-number-picker 

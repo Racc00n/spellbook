@@ -6,7 +6,7 @@
     <div class="background">      
       <select 
         class="custom-select" 
-        [value] = "selectedSpellClass"
+        [value] = "(spellsState | async).spellClass"
         (change)="onSelectedSpellLevelChange($event.target.value)">
         <option *ngFor="let spellClass of spellClasses" [value]="spellClass.spellClass">{{spellClass.label}}</option>    
       </select>

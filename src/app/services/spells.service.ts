@@ -43,7 +43,7 @@ export class SpellsService {
 
   private async populateSpells() {
     this.spellsIndex = {};
-    const spellsReponse = await this.persistance.getSpellsByClass(this.spellClass);
+    const spellsReponse = await this.persistance.fetchSpellsByClass(this.spellClass);
     if (this.spells.length > 0 ) {
       this.spells.length = 0;
     }

@@ -1,5 +1,5 @@
 import { SpellsService } from './../../services/spells.service';
-import { FETCH_SPELL_META_DATAS, FetchSpellMetaDatas, SET_SPELL_META_DATAS, STORE_SPELL_META_DATAS } from './spell-meta-datas.actions';
+import { FetchSpellMetaDatas, SetSpellMetaDatas, SpellMetaDatasActionTypes } from './spell-meta-datas.actions';
 import { PersistanceService } from './../../services/persistance.service';
 import { AppState } from './../app.reducers';
 import { Observable } from 'rxjs/Observable';
@@ -21,23 +21,21 @@ export class SpellMetaDatasEffects {
 
   @Effect()
   spellMetaDatasFetch = this.actions
-    .ofType(FETCH_SPELL_META_DATAS)
+    .ofType(SpellMetaDatasActionTypes.FETCH_SPELL_META_DATAS)
     .switchMap((action: FetchSpellMetaDatas) => {
       return Observable.fromPromise(
         this.persistance.fetchSpellsMetaDataByClass(
           this.spellsService.spellClass
         )
       );
-    }).map((spellMetaDatas) => {
-      return {
-        type: SET_SPELL_META_DATAS,
-        payload: spellMetaDatas
-      }
-    });
+    })
+    .map(spellMetaDatas =>
+      new SetSpellMetaDatas(spellMetaDatas)
+    );
 
   @Effect({ dispatch: false })
   spellMetaDatasStore = this.actions
-    .ofType(STORE_SPELL_META_DATAS)
+    .ofType(SpellMetaDatasActionTypes.STORE_SPELL_META_DATAS)
     .withLatestFrom(this.store.select('spellMetaDatas'))
     .switchMap(([action, state]) => {
       return Observable.fromPromise(

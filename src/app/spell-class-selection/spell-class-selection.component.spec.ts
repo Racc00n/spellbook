@@ -1,8 +1,7 @@
-import { SpellsServiceMock } from './../services/spells.service.mock';
+import { StoreMock } from './../stores/store.mock';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SpellClassSelectionComponent } from './spell-class-selection.component';
-import { SpellsService } from '../services/spells.service';
+import { Store } from '@ngrx/store';
 
 describe('SpellClassSelectionComponent', () => {
   let component: SpellClassSelectionComponent;
@@ -11,7 +10,7 @@ describe('SpellClassSelectionComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SpellClassSelectionComponent ],
-      providers: [{ provide: SpellsService, useClass: SpellsServiceMock}]
+      providers: [{ provide:Store, useClass:StoreMock }]
     })
     .compileComponents();
   }));

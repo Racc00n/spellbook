@@ -1,7 +1,6 @@
 import { LevelPipe } from './../pipes/level.pipe';
 import { UpdateSelectedSpellLevelLabel } from './../stores/spell-levels/spell-levels.actions';
 import { Observable } from 'rxjs/Observable';
-import { SpellsService } from './../services/spells.service';
 import { UpdateSpellMetaData, StoreSpellMetaDatas } from './../stores/spell-meta-datas/spell-meta-datas.actions';
 import { SpellLevel } from './../model/spell-level';
 import { Spell } from './../model/spell';
@@ -11,6 +10,8 @@ import { AppState } from '../stores/app.reducers';
 import { Store } from '@ngrx/store';
 import { SpellMetaData } from '../model/spell-meta-data';
 import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
+import * as fromSpells from './../stores/spells/spells.reducers';
+
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -39,18 +40,20 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
   spellLevelSubscription: Subscription;
   spells: Spell[];
   spellLevelsState: Observable<fromSpellLevels.State>;    
+  spellsState: Observable<fromSpells.State>;    
+  
   totalPreparedSpells: number;
   totalAllowedSpells: number;
   replenishClicked: boolean;
 
-  constructor(private store: Store<AppState>,
-    private spellService: SpellsService) { 
+  constructor(private store: Store<AppState>) { 
       
-    }
+  }
 
   ngOnInit() {
     this.spellLevelsState = this.store.select('spellLevels');
-    this.spells = this.spellService.spells;
+    this.spellsState = this.store.select('spells');
+        
     this.totalPreparedSpells = 0;
     this.totalAllowedSpells = 0;
     this.spellLevelSubscription = this.spellLevelsState.subscribe(state => {
@@ -60,9 +63,14 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
           break;
         }
       }
+      let spells:Spell[];      
+      this.spellsState
+        .take(1)
+        .subscribe(lastSpellsState => spells = fromSpells.adapter.getSelectors().selectAll(lastSpellsState));
+
       this.totalPreparedSpells = 0;
-      new LevelPipe(this.spellService)
-        .transform(this.spells,state.selectedSpellLevelLabel)      
+      new LevelPipe(this.store)
+        .transform(spells,state.selectedSpellLevelLabel)      
         .map(spell=>this.totalPreparedSpells += spell.metaData.preparedUses);
     });
   }

@@ -1,4 +1,3 @@
-import { SpellsService } from './services/spells.service';
 import { SpellMetaDatasEffects } from './stores/spell-meta-datas/spell-meta-datas.effects';
 import { AppRoutingModule } from './app-routing.module';
 import { PersistanceService } from './services/persistance.service';
@@ -33,8 +32,7 @@ import { SpellClassSelectionComponent } from './spell-class-selection/spell-clas
     EffectsModule.forRoot([SpellLevelsEffects, SpellMetaDatasEffects])
   ],
   providers: [
-    PersistanceService,
-    SpellsService    
+    PersistanceService
   ],
   bootstrap: [AppComponent]
 })
