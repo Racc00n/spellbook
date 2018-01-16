@@ -12,20 +12,20 @@ import * as fromSpells from '../stores/spells/spells.reducers';
 })
 export class SpellClassSelectionComponent implements OnInit {
   spellsState: Observable<fromSpells.State>;
-  spellClasses: {spellClass: SpellClass ,label:string}[] ;  
+  spellClasses: { spellClass: SpellClass, label: string }[];
 
-  constructor(private store:Store<AppState>) {
+  constructor(private store: Store<AppState>) {
     this.spellsState = store.select('spells');
     this.spellClasses = [];
-   }
+  }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.spellClasses = Object.keys(SpellClass).map(
-      key => ({ spellClass: <SpellClass>SpellClass[key as any], label: key})
+      key => ({ spellClass: <SpellClass>SpellClass[key as any], label: key })
     );
   }
 
-  onSelectedSpellLevelChange(newValue:SpellClass) {    
+  onSelectedSpellLevelChange(newValue: SpellClass) {
     this.store.dispatch(new UpdateSpellClass(newValue));
   }
 

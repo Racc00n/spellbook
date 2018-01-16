@@ -1,4 +1,3 @@
-import { SpellsService } from './../../services/spells.service';
 import { AppState } from './../app.reducers';
 import { SpellLevel } from './../../model/spell-level';
 import { Observable } from 'rxjs/Observable';

@@ -2,7 +2,7 @@ import { FetchSpellMetaDatas } from './../spell-meta-datas/spell-meta-datas.acti
 import { FetchSpellLevels } from './../spell-levels/spell-levels.actions';
 import { SpellMetaData } from './../../model/spell-meta-data';
 import { Observable } from 'rxjs/Observable';
-import { SpellActionTypes, FetchSpells, UpdateSpellClass, SetSpells } from './spells.actions';
+import { SpellActionTypes, FetchSpells, UpdateSpellClass, SetSpells, SpellActions } from './spells.actions';
 import { PersistanceService } from './../../services/persistance.service';
 import { AppState } from './../app.reducers';
 import { Actions, Effect } from '@ngrx/effects';
@@ -16,10 +16,10 @@ import 'rxjs/add/operator/mergeMap';
 
 @Injectable()
 export class SpellsEffects {
-  
-  constructor(private actions: Actions,
-              private store: Store<AppState>,
-              private persistance: PersistanceService) {}
+
+  constructor(private actions: Actions<SpellActions>,
+    private store: Store<AppState>,
+    private persistance: PersistanceService) { }
 
   @Effect()
   spellsFetch = this.actions
@@ -30,7 +30,7 @@ export class SpellsEffects {
         this.persistance.fetchSpellsByClass(state.spellClass))
     })
     .withLatestFrom(this.store.select('spellMetaDatas'))
-    .map( ([spells, metaDataState]) => {
+    .map(([spells, metaDataState]) => {
       const updateSpells = spells.map(spell => {
         spell.metaData = metaDataState.spellMetaDatas[spell.name] || new SpellMetaData(); //need to see what to do about meta data
         return spell;
@@ -38,7 +38,16 @@ export class SpellsEffects {
       return new SetSpells(updateSpells);
     });
 
-  
+  @Effect()
+  spellClassUpdate = this.actions
+    .ofType(SpellActionTypes.UPDATE_SPELL_CLASS)
+    .mergeMap(action => [ // TODO: might want to split this
+        new FetchSpells(),
+        new FetchSpellLevels(),
+        new FetchSpellMetaDatas()
+      ]
+    );
+
   @Effect()
   spellClassFetch = this.actions
     .ofType(SpellActionTypes.FETCH_SPELL_CLASS)
@@ -46,24 +55,15 @@ export class SpellsEffects {
       return Observable.fromPromise(
         this.persistance.fetchSpellClass());
     })
-    .mergeMap(spellClass =>{ 
-      return [
-        new UpdateSpellClass(spellClass),
-        new FetchSpells(),
-        new FetchSpellLevels(),
-        new FetchSpellMetaDatas()
-      ]
-    })
-    // .map(spellClass => {
-    //   return new UpdateSpellClass(spellClass);
-    // });
-  
-  @Effect({dispatch: false})
+    .map(spellClass => new UpdateSpellClass(spellClass));
+
+
+  @Effect({ dispatch: false })
   spellClassStore = this.actions
     .ofType(SpellActionTypes.STORE_SPELL_CLASS)
     .withLatestFrom(this.store.select('spells'))
     .switchMap(([action, state]) => {
       return Observable.fromPromise(
-        this.persistance.storeSpellClass(state.spellClass));    
-    });  
+        this.persistance.storeSpellClass(state.spellClass));
+    });
 }

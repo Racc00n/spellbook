@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
 
   storeAll() {
     this.store.dispatch(new StoreSpellMetaDatas());
-    this.store.dispatch(new StoreSpellLevels());    
-    this.store.dispatch(new StoreSpellClass());        
+    this.store.dispatch(new StoreSpellLevels());
+    this.store.dispatch(new StoreSpellClass());
   }
 }
