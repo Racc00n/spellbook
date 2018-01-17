@@ -24,7 +24,7 @@
       <tbody #tbody>
         <tr [@spellRemoval] 
             (@spellRemoval.done)="spellRemovalDone(tbody.children.length === 0)" 
-            *ngFor="let spell of selectAllSpells(spellsState | async) | level: spellLevel.label: (spellsState | async).spellClass | known | remainingUses">
+            *ngFor="let spell of selectAllSpells(spellsState | async) | level: spellLevel.label: (spellsState | async).spellClass | known | remainingUses ; trackBy:spellsTrackBy" >
           <td>{{spell.metaData.remainingUses}}</td>
           <td>
             <button class="btn btn-fab btn-primary" (click)="castSpellClicked(spell)">Cast</button>

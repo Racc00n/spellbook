@@ -16,12 +16,12 @@ import { SpellMetaData } from '../model/spell-meta-data';
   templateUrl: './spells-use.component.html',
   styleUrls: ['./spells-use.component.scss'],
   animations: [
-    trigger('spellRemoval', [
-      state('in', style({
-        opacity: 1,
-        transform: 'translateX(0)'
-      })),
-      transition('* => void', [
+    trigger('spellRemoval', [      
+      transition(':leave', [
+        style({
+          opacity: 1,
+          transform: 'translateX(0)'
+        }),
         animate(200, style({
           transform: 'translateX(100px)',
           opacity: 0
@@ -69,5 +69,10 @@ export class SpellsUseComponent implements OnInit, OnDestroy {
 
   onSpellInfoClicked(spell: Spell) {
     alert(spell.description);
+  }
+
+  spellsTrackBy(index:number, spell:Spell) {
+    console.log(spell.name);
+    return spell.name;
   }
 }
