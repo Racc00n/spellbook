@@ -420,7 +420,7 @@ var PersistanceService = (function () {
     PersistanceService.prototype.fetchSpellsByClass = function (spellClass) {
         var _this = this;
         var result = new Promise(function (resolve, reject) {
-            var subscription = _this.http.get('../assets/spells.json').subscribe(function (data) {
+            var subscription = _this.http.get('assets/spells.json').subscribe(function (data) {
                 try {
                     var spells = data.spells;
                     var filteredSpells = spells

@@ -15,7 +15,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "h1 {\n  background-color: #007bff;\n  color: white;\n  margin-bottom: 0;\n  position: block; }\n\ndiv {\n  height: 100vh;\n  width: 100%;\n  overflow-y: hidden; }\n\ndiv .background {\n  background: url(/assets/book-cover.svg) no-repeat 0 30%;\n  background-size: 100%;\n  background-color: #007bff;\n  height: 100%;\n  width: auto; }\n\nselect {\n  color: #007bff;\n  font-weight: bold;\n  background-image: #007bff; }\n", ""]);
+exports.push([module.i, "h1 {\n  background-color: #007bff;\n  color: white;\n  margin-bottom: 0;\n  position: block; }\n\ndiv {\n  height: 100vh;\n  width: 100%;\n  overflow-y: hidden; }\n\ndiv .background {\n  background: url(assets/book-cover.svg) no-repeat 0 30%;\n  background-size: 100%;\n  background-color: #007bff;\n  height: 100%;\n  width: auto; }\n\nselect {\n  color: #007bff;\n  font-weight: bold;\n  background-image: #007bff; }\n", ""]);
 
 // exports
 
