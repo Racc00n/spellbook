@@ -1,21 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
 $fa-font-path: "/node_modules/font-awesome/scss/font";
 h1 {
-    position:sticky;
-    top:0;    
-    background-color: white;
-    margin-bottom: 0;
-    padding-bottom: 0;    
-    z-index: 100;
+  flex: 0 0 auto;
+}
+
+.root {    
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  text-align: center;
 }
 
 .content {
-  width: 90vw;
-  overflow-x: auto;
+  flex: 1 1 auto;
+  overflow-x: auto;  
+  overflow-y: auto;  
 }
 
 button {
   cursor:  pointer;
+}
+
+select.custom-select {
+  width: initial;
+  color: #007bff;
+  font-weight: bold;
+}
+
+option {
+  font-weight: bold;
 }
 
 
