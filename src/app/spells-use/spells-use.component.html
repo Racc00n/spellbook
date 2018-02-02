@@ -1,10 +1,21 @@
-<div class="root">
+<div class="root" [hidden]="isRootHidden">
   <h1>
     <a title="Spells Setup" [routerLink]="['/spells-setup']">
       <i class="fa fa-chevron-left" aria-hidden="true"></i>
     </a>
-    Spells Use
+    Spells Use    
+    <button       
+      [class.btn-primary]="isRollActive"
+      [class.btn-light]="!isRollActive"
+      (click)="isRollActive = !isRollActive"
+      class="btn"
+      data-toggle="button"
+      aria-pressed="isRollActive? true: false" 
+      autocomplete="off">
+    <i class="fa fa-x2 fa-cube" aria-hidden="true"></i>
+    </button>
   </h1>
+   
   <div class="content">
     <div  *ngFor="let spellLevel of (spellLevelsState|async).spellLevels" [hidden]="tbody.children.length === 0">
       <h2 class="alert-dark">Level {{spellLevel.label}} </h2>
@@ -35,7 +46,7 @@
             <td>{{spell.name}}</td>
             <td>{{spell.shortdescription}}
               <br>
-              <app-more-detail [text]="spell.description"></app-more-detail>
+              <app-more-detail [spell]="spell.name"></app-more-detail>
             </td>
             <td>{{spell.school}}</td>
             <td>{{spell.components}}</td>
@@ -51,3 +62,6 @@
     </div>
   </div>
 </div>
+<app-die-roller [hidden]="!isDiceRollerShown"></app-die-roller>
+<router-outlet  (activate)="isRootHidden=true" (deactivate)="isDiceRollerShown = false; isRootHidden=false" ></router-outlet>
+

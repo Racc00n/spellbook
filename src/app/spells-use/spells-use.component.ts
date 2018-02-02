@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { UpdateSpellMetaData, StoreSpellMetaDatas } from './../stores/spell-meta-datas/spell-meta-datas.actions';
 import { Observable } from 'rxjs/Observable';
 import { AppState } from './../stores/app.reducers';
@@ -10,6 +11,7 @@ import { StoreSpellLevels } from '../stores/spell-levels/spell-levels.actions';
 import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
 import * as fromSpells from './../stores/spells/spells.reducers';
 import { SpellMetaData } from '../model/spell-meta-data';
+
 
 @Component({
   selector: 'app-spells-use',
@@ -36,11 +38,14 @@ export class SpellsUseComponent implements OnInit, OnDestroy {
   spellLevelsState: Observable<fromSpellLevels.State>;
   spellsState:  Observable<fromSpells.State>;
   selectAllSpells =  fromSpells.selectAll;
-  
+  isDiceRollerShown = false;
+  isRollActive = true;
   constructor(private store: Store<AppState>,
-              private changeRef: ChangeDetectorRef) { }
+              private changeRef: ChangeDetectorRef,
+              private router:Router,
+              private route: ActivatedRoute) { }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.spellLevelsState = this.store.select('spellLevels');
     this.spellsState = this.store.select('spells');
   }
@@ -52,7 +57,7 @@ export class SpellsUseComponent implements OnInit, OnDestroy {
   spellRemovalDone(shouldDetectChanges: boolean) {
     if (shouldDetectChanges) {
       this.changeRef.detectChanges();
-    }
+    }    
   }
 
   castSpellClicked(spell) {
@@ -65,14 +70,18 @@ export class SpellsUseComponent implements OnInit, OnDestroy {
           spell.metaData.remainingUses - 1)
       })
     );
+    if (this.isRollActive){
+      this.isDiceRollerShown = true;
+      
+      this.router.navigate(['die-roller'], {relativeTo: this.route});
+    }    
   }
-
-  onSpellInfoClicked(spell: Spell) {
-    alert(spell.description);
-  }
-
-  spellsTrackBy(index:number, spell:Spell) {
-    console.log(spell.name);
+ 
+  spellsTrackBy(index:number, spell:Spell) {    
     return spell.name;
+  }
+
+  toggleRoll() {
+    this.isRollActive = !this.isRollActive;
   }
 }

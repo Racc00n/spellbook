@@ -1,4 +1,4 @@
-<div class="root">
+<div class="root" [hidden]="isRootHidden">
   <h1>
     <a title="Spells Per Day" routerLink="/spells-per-day"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
     Spells Setup
@@ -44,7 +44,7 @@
             (click)="onSpellKnownChange(spell)"></i></td>
           <td>{{spell.name}}</td>
           <td >{{spell.shortdescription}}<br>
-            <app-more-detail [text]="spell.description"></app-more-detail>          
+            <app-more-detail [spell]="spell.name"></app-more-detail>          
           </td>
           <td>{{spell.school}}</td>
           <td>{{spell.components}}</td>
@@ -59,6 +59,7 @@
     </table>
     <div [@alert]  *ngIf="replenishClicked" class="alert alert-success" role="alert">
       All your spells have been replenished
-    </div>
+    </div>    
   </div>  
 </div>
+<router-outlet (activate)="isRootHidden = true" (deactivate)="isRootHidden= false"></router-outlet>

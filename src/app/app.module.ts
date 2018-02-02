@@ -12,10 +12,11 @@ import { EffectsModule } from '@ngrx/effects';
 import { SpellLevelsEffects } from './stores/spell-levels/spell-levels.effects';
 import { reducers } from './stores/app.reducers';
 import { SpellsEffects } from './stores/spells/spells.effects';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent    
   ],
   imports: [
     BrowserModule,
@@ -26,7 +27,8 @@ import { SpellsEffects } from './stores/spells/spells.effects';
     EffectsModule.forRoot([SpellLevelsEffects, SpellMetaDatasEffects, SpellsEffects])
   ],
   providers: [
-    PersistanceService
+    PersistanceService,
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })

@@ -1,3 +1,4 @@
+import { TextDescriptionComponent } from './../shared/components/text-description/text-description.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {  SpellsSetupComponent } from "./spells-setup.component";
@@ -7,7 +8,9 @@ import { SharedModule } from '../shared/shared.module';
   imports: [
     CommonModule,
     RouterModule.forChild([
-      { path: '', component: SpellsSetupComponent},
+      { path: '', component: SpellsSetupComponent, children: [
+        { path: 'text-description/:spell', component: TextDescriptionComponent},
+      ]}      
     ]),
     SharedModule
   ],
