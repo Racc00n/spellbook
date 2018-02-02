@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Location } from '@angular/common';
 
 @Component({
@@ -6,34 +6,18 @@ import { Location } from '@angular/common';
   templateUrl: './die-roller.component.html',
   styleUrls: ['./die-roller.component.scss']
 })
-export class DieRollerComponent implements OnInit {  
-  constructor(private location: Location) { }
+
+export class DieRollerComponent implements OnInit {
   @ViewChild('iframe') iframe;
+  @Input() disabled: boolean;
+
+  constructor(private location: Location) { }
 
   ngOnInit() {
     console.log(`iframe ${this.iframe}`);
   }
 
-  onCloseClicked() {    
+  onCloseClicked() {
     this.location.back();
   }
-
-  onIFrameLoad(event) {
-    console.log('iframe loaded',document.activeElement);
-    console.log('iframe loaded event',event);
-    if (document.activeElement instanceof HTMLBodyElement){
-      (<HTMLBodyElement>document.activeElement).blur();
-      event.path[0].contentWindow.addEventListener('focus',(event)=>{
-        event.target.blur();        
-      });
-    } else {
-
-    }    
-  }
-  
-  loseFocus(event) {
-    console.log(`lose Focus ${event}`);
-    event.target.blur();
-  }
-
 }

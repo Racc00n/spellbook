@@ -18,7 +18,7 @@ import { SpellMetaData } from '../model/spell-meta-data';
   templateUrl: './spells-use.component.html',
   styleUrls: ['./spells-use.component.scss'],
   animations: [
-    trigger('spellRemoval', [      
+    trigger('spellRemoval', [
       transition(':leave', [
         style({
           opacity: 1,
@@ -36,16 +36,19 @@ import { SpellMetaData } from '../model/spell-meta-data';
 export class SpellsUseComponent implements OnInit, OnDestroy {
 
   spellLevelsState: Observable<fromSpellLevels.State>;
-  spellsState:  Observable<fromSpells.State>;
-  selectAllSpells =  fromSpells.selectAll;
+  spellsState: Observable<fromSpells.State>;
+  selectAllSpells = fromSpells.selectAll;
   isDiceRollerShown = false;
   isRollActive = true;
-  constructor(private store: Store<AppState>,
-              private changeRef: ChangeDetectorRef,
-              private router:Router,
-              private route: ActivatedRoute) { }
+  isRootHidden = false;
+    
+  constructor(
+    private store: Store<AppState>,
+    private changeRef: ChangeDetectorRef,
+    private router: Router,
+    private route: ActivatedRoute) { }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.spellLevelsState = this.store.select('spellLevels');
     this.spellsState = this.store.select('spells');
   }
@@ -57,7 +60,7 @@ export class SpellsUseComponent implements OnInit, OnDestroy {
   spellRemovalDone(shouldDetectChanges: boolean) {
     if (shouldDetectChanges) {
       this.changeRef.detectChanges();
-    }    
+    }
   }
 
   castSpellClicked(spell) {
@@ -70,14 +73,14 @@ export class SpellsUseComponent implements OnInit, OnDestroy {
           spell.metaData.remainingUses - 1)
       })
     );
-    if (this.isRollActive){
+    if (this.isRollActive) {
       this.isDiceRollerShown = true;
-      
-      this.router.navigate(['die-roller'], {relativeTo: this.route});
-    }    
+
+      this.router.navigate(['die-roller'], { relativeTo: this.route });
+    }
   }
- 
-  spellsTrackBy(index:number, spell:Spell) {    
+
+  spellsTrackBy(index: number, spell: Spell) {
     return spell.name;
   }
 

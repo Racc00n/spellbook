@@ -46,7 +46,8 @@ export class SpellsSetupComponent implements OnInit, OnDestroy {
   selectAllSpells = fromSpells.selectAll;
   totalPreparedSpells: number;
   totalAllowedSpells: number;
-  replenishClicked: boolean;
+  replenishClicked = false;
+  isRootHidden = false;
 
   constructor(private store: Store<AppState>) {
 

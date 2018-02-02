@@ -62,6 +62,6 @@
     </div>
   </div>
 </div>
-<app-die-roller [hidden]="!isDiceRollerShown"></app-die-roller>
+<app-die-roller [hidden]="!isDiceRollerShown" [disabled]="!isDiceRollerShown"></app-die-roller>
 <router-outlet  (activate)="isRootHidden=true" (deactivate)="isDiceRollerShown = false; isRootHidden=false" ></router-outlet>
 
