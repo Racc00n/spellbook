@@ -1,5 +1,4 @@
-import { SpellsService } from './../../services/spells.service';
-import { FETCH_SPELL_META_DATAS, FetchSpellMetaDatas, SET_SPELL_META_DATAS, STORE_SPELL_META_DATAS } from './spell-meta-datas.actions';
+import { FetchSpellMetaDatas, SetSpellMetaDatas, SpellMetaDatasActionTypes } from './spell-meta-datas.actions';
 import { PersistanceService } from './../../services/persistance.service';
 import { AppState } from './../app.reducers';
 import { Observable } from 'rxjs/Observable';
@@ -16,34 +15,33 @@ export class SpellMetaDatasEffects {
 
   constructor(private actions: Actions,
               private store: Store<AppState>,
-              private persistance: PersistanceService,
-              private spellsService: SpellsService) { }
+              private persistance: PersistanceService) { }
 
   @Effect()
   spellMetaDatasFetch = this.actions
-    .ofType(FETCH_SPELL_META_DATAS)
-    .switchMap((action: FetchSpellMetaDatas) => {
+    .ofType(SpellMetaDatasActionTypes.FETCH_SPELL_META_DATAS)
+    .withLatestFrom(this.store.select('spells'))
+    .switchMap(([action, state]) => {
       return Observable.fromPromise(
         this.persistance.fetchSpellsMetaDataByClass(
-          this.spellsService.spellClass
+          state.spellClass
         )
       );
-    }).map((spellMetaDatas) => {
-      return {
-        type: SET_SPELL_META_DATAS,
-        payload: spellMetaDatas
-      }
-    });
+    })
+    .map(spellMetaDatas =>
+      new SetSpellMetaDatas(spellMetaDatas)
+    );
 
   @Effect({ dispatch: false })
   spellMetaDatasStore = this.actions
-    .ofType(STORE_SPELL_META_DATAS)
+    .ofType(SpellMetaDatasActionTypes.STORE_SPELL_META_DATAS)
     .withLatestFrom(this.store.select('spellMetaDatas'))
-    .switchMap(([action, state]) => {
+    .withLatestFrom(this.store.select('spells'))
+    .switchMap(([[action, spellMetaDatasState], spellState]) => {
       return Observable.fromPromise(
         this.persistance.storeSpellsMetaDataByClass(
-          state.spellMetaDatas,
-          this.spellsService.spellClass
+          spellMetaDatasState.spellMetaDatas,
+          spellState.spellClass
         )
       );
     });

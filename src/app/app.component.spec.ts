@@ -1,3 +1,4 @@
+import { FetchSpellClass } from './stores/spells/spells.actions';
 import { FetchSpellLevels, StoreSpellLevels } from './stores/spell-levels/spell-levels.actions';
 import { StoreMock } from './stores/store.mock';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -5,20 +6,17 @@ import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { SpellsService } from './services/spells.service';
-import { SpellsServiceMock } from './services/spells.service.mock';
 import { StoreSpellMetaDatas } from './stores/spell-meta-datas/spell-meta-datas.actions';
 
 @Component({
   template: ''
 })
-class DummyComponent { }
+export class DummyComponent { }
 
 describe('AppComponent', () => {
-  let fixture:ComponentFixture<AppComponent>;
-  let app:AppComponent;
-  let store:StoreMock;
-  let spellsService:SpellsServiceMock;
+  let fixture: ComponentFixture<AppComponent>;
+  let app: AppComponent;
+  let store: StoreMock;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -32,35 +30,33 @@ describe('AppComponent', () => {
         ])
       ],
       providers: [
-        { provide: Store, useClass: StoreMock },
-        { provide: SpellsService, useClass: SpellsServiceMock },
+        { provide: Store, useClass: StoreMock }
       ]
     }).compileComponents();
   }));
-  
-  beforeEach(()=>{
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
-    app = fixture.debugElement.componentInstance;    
+    app = fixture.debugElement.componentInstance;
     store = TestBed.get(Store);
-    spellsService = TestBed.get(SpellsService);
   });
 
-  it('should create the app', () => {    
+  it('should create the app', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should init the spellsService', () => {
-    const initSpy = spyOn(spellsService,'init');
-    fixture.detectChanges();    
-    expect(initSpy).toHaveBeenCalled();
+  it('should dispatch a fetch to the current spell class', () => {
+    const spy = spyOn(store, 'dispatch');
+    fixture.detectChanges();
+    expect(spy).toHaveBeenCalledWith(new FetchSpellClass());
   });
 
-  it('should store spell levels and spellmetadatas wehn window is beforeunload',() => {
-    const storeDispatchSpy = spyOn(store,'dispatch');
+  it('should store spell levels and spellmetadatas wehn window is beforeunload', () => {
+    const storeDispatchSpy = spyOn(store, 'dispatch');
     fixture.detectChanges();
     window.dispatchEvent(new Event('beforeunload'));
     expect(storeDispatchSpy).toHaveBeenCalledWith(new StoreSpellMetaDatas());
     expect(storeDispatchSpy).toHaveBeenCalledWith(new StoreSpellLevels());
   });
-  
+
 });

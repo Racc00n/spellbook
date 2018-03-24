@@ -1,4 +1,4 @@
-import { SpellMetaDatasActions, SET_SPELL_META_DATAS, UPDATE_SPELL_META_DATA } from './spell-meta-datas.actions';
+import { SpellMetaDatasActions, SpellMetaDatasActionTypes } from './spell-meta-datas.actions';
 import { SpellMetaData } from './../../model/spell-meta-data';
 
 export interface State {
@@ -11,12 +11,12 @@ const initialState: State = {
 
 export function SpellMetaDatasReducer(state = initialState, action:SpellMetaDatasActions) {
   switch (action.type) {
-    case SET_SPELL_META_DATAS:
+    case SpellMetaDatasActionTypes.SET_SPELL_META_DATAS:
       return {
         ...state,
         spellMetaDatas: action.payload
       };
-    case UPDATE_SPELL_META_DATA:            
+    case SpellMetaDatasActionTypes.UPDATE_SPELL_META_DATA:            
       return {
         ...state,
         spellMetaDatas: {

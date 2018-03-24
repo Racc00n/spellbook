@@ -158,7 +158,7 @@ describe('PersistanceService', () => {
         }
       ];
 
-      service.getSpellsByClass(SpellClass.sorcererWizard).then(
+      service.fetchSpellsByClass(SpellClass.sorcererWizard).then(
         spells => {
           expect(spells.length).toEqual(1);
           expect(spells[0].level).toContain(SpellClass.sorcererWizard);

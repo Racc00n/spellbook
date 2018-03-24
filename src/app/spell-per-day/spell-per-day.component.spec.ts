@@ -7,12 +7,9 @@ import { By } from '@angular/platform-browser';
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { SpellPerDayComponent } from './spell-per-day.component';
-import { PersistanceService } from '../services/persistance.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RouterModule } from '@angular/router';
 import { Component, Injectable } from '@angular/core';
-import { SpellsService } from '../services/spells.service';
-import { SpellsServiceMock } from '../services/spells.service.mock';
 import { Store } from '@ngrx/store';
 
 import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
@@ -21,12 +18,11 @@ import { NumberPickerComponent } from '../shared/components/number-picker/number
 @Component({
   template: ''
 })
-class DummyComponent { }
+export class DummyComponent { }
 
 describe('SpellPerDayComponent', () => {
   let component: SpellPerDayComponent;
   let fixture: ComponentFixture<SpellPerDayComponent>;
-  let persistanceService: SpellsServiceMock;
   let store: StoreMock;
 
   beforeEach(async(() => {
@@ -37,7 +33,6 @@ describe('SpellPerDayComponent', () => {
         NumberPickerComponent
       ],
       providers: [
-        { provide: SpellsService, useClass: SpellsServiceMock },
         { provide: Store, useClass: StoreMock }
       ],
       imports: [
@@ -55,7 +50,7 @@ describe('SpellPerDayComponent', () => {
     store.stateMap = {};
     store.subjectsMap = {};
   });
-  
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -64,7 +59,7 @@ describe('SpellPerDayComponent', () => {
     const index = 0;
     const level = defaultSpellLevels[index];
     const numOfSpells = level.numOfSpells + 1;
-    let spy = spyOn(store, 'dispatch');
+    const spy = spyOn(store, 'dispatch');
     component.onSpellLevelChange(0, level, numOfSpells);
     expect(spy).toHaveBeenCalledWith(new UpdateSpellLevel({
       index,
@@ -73,45 +68,45 @@ describe('SpellPerDayComponent', () => {
   });
 
   it('should store spell levels when component is destroyed', () => {
-    let spy = spyOn(store, 'dispatch');
+    const spy = spyOn(store, 'dispatch');
     fixture.destroy();
     expect(spy).toHaveBeenCalledWith(new StoreSpellLevels());
   });
 
   describe('SpellLevels tests', () => {
-    let state; 
+    let state;
     beforeEach(fakeAsync(() => {
       state = <fromSpellLevels.State>{
         selectedSpellLevelLabel: '0',
         spellLevels: defaultSpellLevels
-      }
+      };
       store.stateMap['spellLevels'] = state;
-      fixture.detectChanges();      
+      fixture.detectChanges();
       tick();
-    }));  
+    }));
 
-    it('should have spell levels defined', () => {      
+    it('should have spell levels defined', () => {
       component.spellLevelsState.subscribe(currentState => {
         expect(currentState).toEqual(state);
-      })
+      });
     });
 
-    it('should display the spell levels labels in the headers ', () => {      
+    it('should display the spell levels labels in the headers ', () => {
       const headerElements = fixture.debugElement.queryAll(By.css('tr>th'));
       const th = (<HTMLTableHeaderCellElement>headerElements[1].nativeElement);
-      expect(headerElements.length).toEqual(defaultSpellLevels.length + 1);      
+      expect(headerElements.length).toEqual(defaultSpellLevels.length + 1);
       expect(th.textContent).toEqual(defaultSpellLevels[0].label);
-      
+
     });
 
-    it('should display the spell levels num of spells in the inputs ', () => {      
+    it('should display the spell levels num of spells in the inputs ', () => {
       const elements = fixture.debugElement.queryAll(By.css('tr>td'));
       const input = elements[1].query(By.directive(NumberPickerComponent)).componentInstance;
-      expect(elements.length).toEqual(defaultSpellLevels.length + 1);            
+      expect(elements.length).toEqual(defaultSpellLevels.length + 1);
       expect(input.value).toEqual(defaultSpellLevels[0].numOfSpells);
     });
 
-    it('should trigger the onSpellChange function when firing an input event from the input', () => {      
+    it('should trigger the onSpellChange function when firing an input event from the input', () => {
       const spy = spyOn(component, 'onSpellLevelChange');
       const input = fixture.debugElement.query(By.directive(NumberPickerComponent)).nativeElement;
       input.dispatchEvent(new Event('input'));

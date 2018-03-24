@@ -1,8 +1,10 @@
 # SpellBook
 A D&amp;D wizard spellbook app
+You can see the demo here: https://racc00n.github.io/spellbook/
+
 assets/spells.json includes spells of the 3.5. As long as you keep the same format, you can replace it with any version you want.
 Fits mobile devices as well.
-Uses local storage to keep your prepared spells save.
+Uses local storage to keep your prepared spells saved per class.
 Technologies: 
   - Angular 5 (with Angular CLI)
   - ngrx

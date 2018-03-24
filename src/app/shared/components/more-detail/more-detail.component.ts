@@ -1,4 +1,6 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, Input } from '@angular/core';
+
 
 @Component({
   selector: 'app-more-detail',
@@ -6,14 +8,15 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./more-detail.component.scss']
 })
 export class MoreDetailComponent implements OnInit {
-  @Input() text:string = '';
-  constructor() { }
+  @Input() spell = '';
+  constructor(private router: Router,
+              private route: ActivatedRoute) { }
 
   ngOnInit() {
   }
 
   onClick() {
-    alert(this.text);
+    this.router.navigate(['text-description', this.spell], { relativeTo: this.route });
   }
 
 }

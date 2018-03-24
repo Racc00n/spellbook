@@ -16,6 +16,7 @@
 *.launch
 .settings/
 *.sublime-workspace
+/.history
 
 # IDE - VSCode
 .vscode/*
@@ -42,4 +43,3 @@ testem.log
 Thumbs.db
 
 #assets
-/assets/spells.json

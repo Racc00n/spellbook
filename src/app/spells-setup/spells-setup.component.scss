@@ -1,21 +1,5 @@
 .spell-controls {
-    position: sticky;
-    top: 3rem;
-    background-color: white;
-}
-
-input[type="checkbox"] {
-   height: 2.4rem;    
-}
- 
-select {
-    vertical-align: middle;
-    width: 4rem;
-    display: inline-block;
-}
-
-table {
-    margin-top: 0.5rem;
+    flex: '0 0 auto';
 }
 
 .alert-success {    

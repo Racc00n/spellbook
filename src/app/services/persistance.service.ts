@@ -63,12 +63,14 @@ export class PersistanceService {
     return result;
   }
 
-  getSpellsByClass(spellClass: SpellClass): Promise<Spell[]> {
+  fetchSpellsByClass(spellClass: SpellClass): Promise<Spell[]> {
     const result = new Promise<Spell[]>((resolve, reject) => {
       const subscription = this.http.get('../assets/spells.json').subscribe((data: { spells: Spell[] }) => {
         try {
           const spells: Spell[] = data.spells;
-          const filteredSpells = spells.filter(spell => spell.level.includes(spellClass));
+          const filteredSpells =
+            spells
+              .filter(spell => spell.level.includes(spellClass));
           resolve(filteredSpells);
         } catch (error) {
           reject('could not load spells ' + error);

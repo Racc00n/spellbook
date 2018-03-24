@@ -1,4 +1,4 @@
-<div> 
+<div class="root"> 
   <h1>
     <a title="Spell Class Selection" routerLink="/spell-class-selection"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>Spells Per Day<a title="Spells Setup" [routerLink]="['/spells-setup']"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
   </h1>
@@ -13,14 +13,7 @@
       <tbody>
         <tr>
           <td>Spells</td>
-          <td *ngFor="let level of (spellLevelsState | async).spellLevels; let i = index">
-            <!-- <input 
-              class="form-control" 
-              type="number" 
-              min="0" 
-              max="30" 
-              [value]="level.numOfSpells"               
-              (focusout)="onSpellLevelChange(i, level, +$event.target.value)"> -->
+          <td *ngFor="let level of (spellLevelsState | async).spellLevels; let i = index">            
             <app-number-picker
               [min]="0" 
               [max]="30"

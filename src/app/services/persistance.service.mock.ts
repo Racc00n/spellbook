@@ -13,7 +13,7 @@ export class PersistanceServiceMock {
     return result;
   }
 
-  getSpellsByClass(spellClass: SpellClass): Promise<Spell[]> {
+  fetchSpellsByClass(spellClass: SpellClass): Promise<Spell[]> {
     const result = new Promise<Spell[]>((resolve, reject) => {
       resolve(this.spellsMock);
     });

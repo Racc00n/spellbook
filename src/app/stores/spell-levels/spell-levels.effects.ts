@@ -1,9 +1,8 @@
-import { SpellsService } from './../../services/spells.service';
 import { AppState } from './../app.reducers';
 import { SpellLevel } from './../../model/spell-level';
 import { Observable } from 'rxjs/Observable';
 import { PersistanceService } from './../../services/persistance.service';
-import { FETCH_SPELL_LEVELS, FetchSpellLevels, SET_SPELL_LEVELS, STORE_SPELL_LEVELS, StoreSpellLevels } from './spell-levels.actions';
+import { FetchSpellLevels, StoreSpellLevels, SpellLevelsActionTypes, SetSpellLevels } from './spell-levels.actions';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import 'rxjs/add/operator/switchMap';
@@ -17,26 +16,23 @@ export class SpellLevelsEffects {
 
   constructor(private actions: Actions,
               private store: Store<AppState>,
-              private persistance: PersistanceService,
-              private spellsService:SpellsService) { }
+              private persistance: PersistanceService) { }
 
   @Effect()
   spellLevelsFetch = this.actions
-    .ofType(FETCH_SPELL_LEVELS)
-    .switchMap((action: FetchSpellLevels) => {
-      return Observable.fromPromise(this.persistance.fetchSpellLevelsByClass(this.spellsService.spellClass));
-    }).map((spellLevels) => {
-      return {
-        type: SET_SPELL_LEVELS,
-        payload: spellLevels
-      }
-    });
+    .ofType(SpellLevelsActionTypes.FETCH_SPELL_LEVELS)
+    .withLatestFrom(this.store.select('spells'))
+    .switchMap(([action, spellsState]) => {
+      return Observable.fromPromise(this.persistance.fetchSpellLevelsByClass(spellsState.spellClass));
+    })
+    .map(spellLevels => new SetSpellLevels(spellLevels));
 
   @Effect({ dispatch: false })
   spellLevelStore = this.actions
-    .ofType(STORE_SPELL_LEVELS)
+    .ofType(SpellLevelsActionTypes.STORE_SPELL_LEVELS)
     .withLatestFrom(this.store.select('spellLevels'))
-    .switchMap(([action, state]) => {
-      return Observable.fromPromise(this.persistance.storeSpellLevelsByClass(state.spellLevels, this.spellsService.spellClass));
+    .withLatestFrom(this.store.select('spells'))
+    .switchMap(([[action, spellLevelsState],spellsState]) => {
+      return Observable.fromPromise(this.persistance.storeSpellLevelsByClass(spellLevelsState.spellLevels, spellsState.spellClass));
     });
 }

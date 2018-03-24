@@ -1,5 +1,5 @@
 import { Spell } from './spell';
-export const spellMocks:Spell[] = [
+export const spellMocks: Spell[] = [
   <Spell>{
     name: 'someSpell',
     level: 'Sor/Wiz 1',
