@@ -68,9 +68,9 @@ export class PersistanceService {
       const subscription = this.http.get('../assets/spells.json').subscribe((data: { spells: Spell[] }) => {
         try {
           const spells: Spell[] = data.spells;
-          const filteredSpells = 
+          const filteredSpells =
             spells
-            .filter(spell => spell.level.includes(spellClass))
+              .filter(spell => spell.level.includes(spellClass));
           resolve(filteredSpells);
         } catch (error) {
           reject('could not load spells ' + error);

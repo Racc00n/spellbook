@@ -12,25 +12,25 @@ export enum SpellMetaDatasActionTypes {
 export class SetSpellMetaDatas implements Action {
   readonly type = SpellMetaDatasActionTypes.SET_SPELL_META_DATAS;
 
-  constructor(public payload:{ [spell: string]: SpellMetaData }) {}
+  constructor(public payload: { [spell: string]: SpellMetaData }) { }
 }
 
 export class UpdateSpellMetaData implements Action {
   readonly type = SpellMetaDatasActionTypes.UPDATE_SPELL_META_DATA;
 
-  constructor(public payload:{ spell:string, metaData: SpellMetaData }) {}
+  constructor(public payload: { spell: string, metaData: SpellMetaData }) { }
 }
 
 export class FetchSpellMetaDatas implements Action {
-  readonly type = SpellMetaDatasActionTypes.FETCH_SPELL_META_DATAS; 
+  readonly type = SpellMetaDatasActionTypes.FETCH_SPELL_META_DATAS;
 }
 
 export class StoreSpellMetaDatas implements Action {
-  readonly type = SpellMetaDatasActionTypes. STORE_SPELL_META_DATAS; 
+  readonly type = SpellMetaDatasActionTypes.STORE_SPELL_META_DATAS;
 }
 
-export type SpellMetaDatasActions = 
-    SetSpellMetaDatas 
-  | UpdateSpellMetaData 
-  | FetchSpellMetaDatas 
+export type SpellMetaDatasActions =
+  SetSpellMetaDatas
+  | UpdateSpellMetaData
+  | FetchSpellMetaDatas
   | StoreSpellMetaDatas;

@@ -29,12 +29,12 @@ export function SpellLevelReducer(state = initialState, action: SpellLevelsActio
         ...state,
         spellLevels: spellLevels
       };
-    };
+    }
     case SpellLevelsActionTypes.UPDATE_SELECTED_SPELL_LEVEL_LABEL:
       return {
         ...state,
         selectedSpellLevelLabel : action.payload
-      }
+      };
     default:
       return state;
   }

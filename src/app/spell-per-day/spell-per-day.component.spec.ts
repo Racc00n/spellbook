@@ -10,8 +10,6 @@ import { SpellPerDayComponent } from './spell-per-day.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RouterModule } from '@angular/router';
 import { Component, Injectable } from '@angular/core';
-import { SpellsService } from '../services/spells.service';
-import { SpellsServiceMock } from '../services/spells.service.mock';
 import { Store } from '@ngrx/store';
 
 import * as fromSpellLevels from './../stores/spell-levels/spell-levels.reducers';
@@ -35,7 +33,6 @@ describe('SpellPerDayComponent', () => {
         NumberPickerComponent
       ],
       providers: [
-        { provide: SpellsService, useClass: SpellsServiceMock },
         { provide: Store, useClass: StoreMock }
       ],
       imports: [

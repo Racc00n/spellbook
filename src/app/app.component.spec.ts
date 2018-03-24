@@ -6,8 +6,6 @@ import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { SpellsService } from './services/spells.service';
-import { SpellsServiceMock } from './services/spells.service.mock';
 import { StoreSpellMetaDatas } from './stores/spell-meta-datas/spell-meta-datas.actions';
 
 @Component({
@@ -19,7 +17,6 @@ describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let app: AppComponent;
   let store: StoreMock;
-  let spellsService: SpellsServiceMock;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,8 +30,7 @@ describe('AppComponent', () => {
         ])
       ],
       providers: [
-        { provide: Store, useClass: StoreMock },
-        { provide: SpellsService, useClass: SpellsServiceMock },
+        { provide: Store, useClass: StoreMock }
       ]
     }).compileComponents();
   }));
@@ -43,7 +39,6 @@ describe('AppComponent', () => {
     fixture = TestBed.createComponent(AppComponent);
     app = fixture.debugElement.componentInstance;
     store = TestBed.get(Store);
-    spellsService = TestBed.get(SpellsService);
   });
 
   it('should create the app', () => {
