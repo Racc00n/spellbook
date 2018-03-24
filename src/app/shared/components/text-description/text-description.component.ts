@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
@@ -6,13 +6,15 @@ import { AppState } from '../../../stores/app.reducers';
 import { Observable } from 'rxjs/Observable';
 import * as fromSpells from './../../../stores/spells/spells.reducers';
 import { Location } from '@angular/common';
+import 'rxjs/add/operator/withLatestFrom';
+
 
 @Component({
   selector: 'app-text-description',
   templateUrl: './text-description.component.html',
   styleUrls: ['./text-description.component.scss']
 })
-export class TextDescriptionComponent implements OnInit {
+export class TextDescriptionComponent implements OnInit, OnDestroy {
   spellsState: Observable<fromSpells.State>;
   text: string;
   spellName: string;
@@ -39,10 +41,10 @@ export class TextDescriptionComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  onCloseClicked() {    
+  onCloseClicked() {
     this.location.back();
   }
 
-  
+
 }
 

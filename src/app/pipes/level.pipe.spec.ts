@@ -6,15 +6,15 @@ import { SpellClass } from '../model/spell-class.enum';
 import { spellMocks } from '../model/spell.mock';
 import { Store } from '@ngrx/store';
 
-describe('LevelPipe', () => {  
-  let store:StoreMock;
+describe('LevelPipe', () => {
+  let store: StoreMock;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [        
-        LevelPipe        
-      ],      
-      providers: [        
+      declarations: [
+        LevelPipe
+      ],
+      providers: [
         LevelPipe,
         { provide: Store, useClass: StoreMock }
       ]
@@ -22,18 +22,18 @@ describe('LevelPipe', () => {
   }));
   beforeEach(() => {
     store = TestBed.get(Store);
-    store.stateMap = {'spells': {spellClass: SpellClass.sorcererWizard}}
+    store.stateMap = { 'spells': { spellClass: SpellClass.sorcererWizard } };
     store.subjectsMap = {};
   });
   it('create an instance', inject([LevelPipe], (levelPipe) => {
-    expect(levelPipe).toBeTruthy();    
-  })); 
+    expect(levelPipe).toBeTruthy();
+  }));
 
-  it('should filter out all spells that are not in the current selected level', inject([LevelPipe], (levelPipe:LevelPipe) => {
+  it('should filter out all spells that are not in the current selected level', inject([LevelPipe], (levelPipe: LevelPipe) => {
     const spells = [];
-    Object.assign(spells, spellMocks);    
-    const result = levelPipe.transform(spells,'1');
+    Object.assign(spells, spellMocks);
+    const result = levelPipe.transform(spells, '1', SpellClass.sorcererWizard);
     expect(result.length).toBe(1);
     expect(result[0].level.includes('1')).toBeTruthy();
-  })); 
+  }));
 });
